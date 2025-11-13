@@ -70,12 +70,6 @@ export function AppContent() {
     };
 
     checkAuth();
-    // Esconder la barra después de 200 ms
-    /*const timeout = setTimeout(() => {
-      //NavigationBar.setVisibilityAsync("hidden");
-    }, 200);*/
-
-    //return () => clearTimeout(timeout);
   }, []);
 
   // Mostrar pantalla de carga mientras se verifica la autenticación
