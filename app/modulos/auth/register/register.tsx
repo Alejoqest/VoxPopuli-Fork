@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View } from "react-native";
+import { Alert, View } from "react-native";
 import {
   Text,
   TextInput,
@@ -13,6 +13,7 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { authService } from "../../../../backend/services/authService";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Register">;
 
@@ -92,8 +93,11 @@ const RegisterScreen = () => {
     }
 
     try {
+
+      const res = await authService.registerUser(email, password, username);
+      if (res) Alert.alert(res);
       // 🔹 Crear usuario en Supabase Auth
-      const { data, error } = await supabase.auth.signUp({
+      /*const { data, error } = await supabase.auth.signUp({
         email,
         password,
       });
@@ -109,18 +113,17 @@ const RegisterScreen = () => {
         alert("No se pudo crear el usuario");
         setIsProcessing(false);
         return;
-      }
+      }*/
 
       // 🔹 Guardar datos en AsyncStorage
-      await AsyncStorage.setItem("userEmail", email);
-      await AsyncStorage.setItem("username", username);
-      await AsyncStorage.setItem("userId", user.id);
-
-      setIsProcessing(false);
-      navigation.navigate("Home");
+      //await AsyncStorage.setItem("userEmail", email);
+      //await AsyncStorage.setItem("username", username);
+      //await AsyncStorage.setItem("userId", user.id);
+      if (!res) navigation.navigate("Home");
     } catch (err) {
       console.error("Error registrando usuario:", err);
       alert("Ocurrió un error, intente de nuevo");
+    } finally {
       setIsProcessing(false);
     }
   };

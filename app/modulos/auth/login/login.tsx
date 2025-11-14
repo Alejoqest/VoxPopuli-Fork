@@ -13,6 +13,7 @@ import { supabase } from "../../../../backend/server/supabase";
 import Logo from "../../Components/logo/logo";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 👈 IMPORTANTE
+import { authService } from "../../../../backend/services/authService";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
 
@@ -46,7 +47,11 @@ const LoginScreen = () => {
     }
 
     try {
-      let emailToUse = usernameOrEmail;
+      const res = await authService.login(usernameOrEmail, password);
+      if (res) {
+        Alert.alert(res);
+      }
+      /*let emailToUse = usernameOrEmail;
 
       // Si no es un email, buscamos el email asociado al username
       if (!/\S+@\S+\.\S+/.test(usernameOrEmail)) {
@@ -86,9 +91,11 @@ const LoginScreen = () => {
 
       // ✅ Guardar email para usarlo en BrowsePollsView
       await AsyncStorage.setItem("userEmail", emailToUse);
-
-      Alert.alert("✅ Sesión iniciada correctamente");
-      navigation.navigate("Home");
+      */
+      if (!res) {
+        Alert.alert("✅ Sesión iniciada correctamente");
+        navigation.navigate("Home");
+      }
     } catch (err: any) {
       Alert.alert("Error de conexión", err.message ?? String(err));
     } finally {
@@ -108,7 +115,14 @@ const LoginScreen = () => {
 
   return (
     <GradientBackground>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 16 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 16,
+        }}
+      >
         <View style={{ marginBottom: 32 }}>
           <Logo />
         </View>

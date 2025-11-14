@@ -9,78 +9,57 @@ import BrowsePollsView from "../../Components/browsePollsView/browsePollsView";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { User } from "@supabase/supabase-js";
+import { authService } from "../../../../backend/services/authService";
 
 type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
 
-type User = {
-  id?: string;
+type Profile = {
+  id: string;
   username: string;
   email: string;
+  color: string;
 };
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [user, setUser] = useState<User | null>(null);
+  const [profile, setProfile] = useState<Profile | null>(null);
   const [polls, setPolls] = useState<Poll[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const getUserFromMemory = async () => {
-      try {
-        setLoading(true);
+    const load = async () => {
+      setLoading(true);
+      const session = await authService.getSession();
+      setUser(session?.user ?? null);
+    };
+    load();
+  }, []);
 
-        // 🔹 Recuperar email y username de memoria
-        const email = await AsyncStorage.getItem("userEmail");
-        const username = await AsyncStorage.getItem("username");
+  useEffect(() => {
+    if (!user) return;
+    const loadProfile = async () => {
+      const { data } = await supabase
+        .from("profile")
+        .select("*")
+        .eq("id", user.id)
+        .single();
 
-        if (!email || !username) {
-          console.warn("Faltan datos del usuario en memoria. Redirigiendo al login...");
-          setLoading(false);
-          navigation.navigate("Login");
-          return;
-        }
-
-        
-        const { data: userData, error } = await supabase
-          .from("user_ids")
-          .select("id")
-          .eq("email", email)
-          .maybeSingle();
-
-        if (error) console.error("Error buscando ID:", error.message);
-
-        const fullUser: User = {
-          id: userData?.id,
-          username,
-          email,
-        };
-
-        setUser(fullUser);
-
-        // 🔹 Traer encuestas del usuario (si tiene ID)
-        if (userData?.id) {
-          const { data: pollsData, error: pollsError } = await supabase
-            .from("poll")
-            .select("*")
-            .eq("creator_id_new", userData.id);
-
-          if (pollsError) {
-            console.error("Error obteniendo encuestas:", pollsError.message);
-          } else {
-            setPolls(pollsData || []);
-          }
-        }
-      } catch (err) {
-        console.error("Error general:", err);
-      } finally {
+      if (data) {
+        setProfile(data);
         setLoading(false);
       }
     };
+    loadProfile();
+  }, [user]);
 
-    getUserFromMemory();
-  }, []);
+  const handleLogout = async () => {
+    await authService.logoutUser();
+    navigation.navigate("Login");
+  };
 
-  if (loading) {
+  if (loading || !user || !profile) {
     return (
       <GradientBackground>
         <View style={styles.center}>
@@ -90,22 +69,22 @@ const HomeScreen = () => {
     );
   }
 
-
   return (
     <GradientBackground>
       <View style={styles.view}>
         <View style={styles.center}>
           <Avatar.Text
             size={120}
-            label={user?.username[0]?.toUpperCase() || "U"}
-            style={{ marginTop: 32, marginBottom: 16 }}
+            label={profile.username.slice(0, 1)}
+            style={{ marginTop: 32, marginBottom: 16, backgroundColor: profile.color }}
+            //={profile.color}
           />
           <View style={{ marginBottom: 16 }}>
             <Text variant="headlineMedium" style={{ textAlign: "center" }}>
-              {user?.username}
+              {profile.username}
             </Text>
             <Text variant="bodyLarge" style={{ textAlign: "center" }}>
-              {user?.email}
+              {profile.email}
             </Text>
           </View>
         </View>
@@ -128,7 +107,10 @@ const HomeScreen = () => {
           Explorar encuestas
         </Button>
 
-        <Text variant="headlineSmall" style={[styles.margin, { textAlign: "center" }]}>
+        <Text
+          variant="headlineSmall"
+          style={[styles.margin, { textAlign: "center" }]}
+        >
           Mis Encuestas
         </Text>
 
@@ -140,11 +122,7 @@ const HomeScreen = () => {
           mode="outlined"
           icon="logout"
           style={{ marginVertical: 24 }}
-          onPress={async () => {
-            await supabase.auth.signOut();
-            await AsyncStorage.multiRemove(["userEmail", "username"]);
-            navigation.navigate("Login");
-          }}
+          onPress={handleLogout}
         >
           Cerrar sesión
         </Button>
