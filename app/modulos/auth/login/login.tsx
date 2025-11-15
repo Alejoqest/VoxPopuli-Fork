@@ -46,61 +46,19 @@ const LoginScreen = () => {
       return;
     }
 
-    try {
-      const res = await authService.login(usernameOrEmail, password);
-      if (res) {
-        Alert.alert(res);
-      }
-      /*let emailToUse = usernameOrEmail;
+    const res = await authService.login(usernameOrEmail, password);
 
-      // Si no es un email, buscamos el email asociado al username
-      if (!/\S+@\S+\.\S+/.test(usernameOrEmail)) {
-        const { data: userData, error: userError } = await supabase
-          .from("Users")
-          .select("email")
-          .eq("username", usernameOrEmail)
-          .maybeSingle();
-
-        if (userError || !userData) {
-          setErrors({ ...initialErrors, credentialsFailed: true });
-          setIsProcessing(false);
-          return;
-        }
-
-        emailToUse = userData.email;
-      }
-
-      // Intentar login
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailToUse,
-        password,
-      });
-
-      if (error || !data.user) {
-        if (error?.message?.includes("Email not confirmed")) {
-          Alert.alert(
-            "Correo no verificado",
-            "Por favor, verifica tu correo electrónico antes de iniciar sesión."
-          );
-        } else {
-          setErrors({ ...initialErrors, credentialsFailed: true });
-        }
-        setIsProcessing(false);
-        return;
-      }
-
-      // ✅ Guardar email para usarlo en BrowsePollsView
-      await AsyncStorage.setItem("userEmail", emailToUse);
-      */
-      if (!res) {
-        Alert.alert("✅ Sesión iniciada correctamente");
-        navigation.navigate("Home");
-      }
-    } catch (err: any) {
-      Alert.alert("Error de conexión", err.message ?? String(err));
-    } finally {
-      setIsProcessing(false);
+    if (res) {
+      Alert.alert(res);
+      console.log(res);
+      setErrors({ ...initialErrors, credentialsFailed: true });
     }
+
+    if (!res) {
+      Alert.alert("✅ Sesión iniciada correctamente");
+      navigation.navigate("Home");
+    }
+    setIsProcessing(false);
   };
 
   const checkErrors = (): boolean => {
