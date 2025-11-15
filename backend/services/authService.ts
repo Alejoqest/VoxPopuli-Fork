@@ -8,12 +8,14 @@ export const authService = {
         return data.session ?? null;
     },
 
-    onAuthStateChange: async (callback: (session: Session | null) => void) => {
-        const { data: listener } = supabase.auth.onAuthStateChange((_event, session) => {
+    onAuthStateChange: (callback: (session: Session | null) => void) => {
+        const { data } = supabase.auth.onAuthStateChange((_event, session) => {
             callback(session);
         });
 
-        return () => listener.subscription.unsubscribe();
+        return () => {
+            data.subscription.unsubscribe();
+        };
     },
 
     registerUser: async (email: string, password: string, username: string) => {

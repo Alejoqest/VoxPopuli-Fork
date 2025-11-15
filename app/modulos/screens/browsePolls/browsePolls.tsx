@@ -1,17 +1,16 @@
 import React, { useRef, useState, useEffect } from "react";
-import { pollsStart } from "./data";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../../App";
-import { Button, FAB, Searchbar, Text } from "react-native-paper";
+import { FAB, Searchbar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../Components/browsePollsView/browsePollsView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../../../../backend/server/supabase";
+import { AppStackParamList } from "../../../../navigation/appStack";
 
 type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
+  AppStackParamList,
   "BrowsePoll"
 >;
 

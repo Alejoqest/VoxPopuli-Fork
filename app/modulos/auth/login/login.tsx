@@ -8,14 +8,14 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../../App";
 import { supabase } from "../../../../backend/server/supabase";
 import Logo from "../../Components/logo/logo";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 👈 IMPORTANTE
 import { authService } from "../../../../backend/services/authService";
+import { AuthStackParamList } from "../../../../navigation/authStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
 type Errors = {
   usernameEmpty: boolean;
@@ -56,7 +56,6 @@ const LoginScreen = () => {
 
     if (!res) {
       Alert.alert("✅ Sesión iniciada correctamente");
-      navigation.navigate("Home");
     }
     setIsProcessing(false);
   };

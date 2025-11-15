@@ -3,16 +3,15 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Button, Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { RootStackParamList } from "../../../../App";
 import { Poll } from "../browsePolls/browsePolls";
 import BrowsePollsView from "../../Components/browsePollsView/browsePollsView";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { User } from "@supabase/supabase-js";
 import { authService } from "../../../../backend/services/authService";
+import { AppStackParamList } from "../../../../navigation/appStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Home">;
+type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
 
 type Profile = {
   id: string;

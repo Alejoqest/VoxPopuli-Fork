@@ -8,15 +8,15 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../../App";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
 import { supabase } from "../../../../backend/server/supabase";
 import { chartColors } from "./colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppStackParamList } from "../../../../navigation/appStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "PollResults">;
+type NavigationProp = NativeStackNavigationProp<AppStackParamList, "PollResults">;
 
 export type Poll = {
   id: number;

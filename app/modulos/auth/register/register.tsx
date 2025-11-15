@@ -8,14 +8,14 @@ import {
   HelperText,
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import { RootStackParamList } from "../../../../App";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authService } from "../../../../backend/services/authService";
+import { AuthStackParamList } from "../../../../navigation/authStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Register">;
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Register">;
 
 type errorsTypes = {
   notEmail: boolean;
@@ -98,9 +98,6 @@ const RegisterScreen = () => {
       Alert.alert(res);
       console.log(res);
     }
-
-    if (!res) navigation.navigate("Home");
-
     setIsProcessing(false);
   };
 
