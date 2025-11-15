@@ -8,7 +8,6 @@ import {
 } from "react-native-paper";
 import { ScrollView, View, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../../App";
 import { useNavigation } from "@react-navigation/native";
 import DateTimePicker from "../../Components/datetimepicker/datetimepicker";
 import OptionsForm from "./components/optionsForm";
@@ -16,9 +15,10 @@ import NotificationSwitch from "./components/notificationSwitch";
 import AppModal from "../../Components/modal/modal";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
+import { AppStackParamList } from "../../../../navigation/appStack";
 
 type NavigationProp = NativeStackNavigationProp<
-  RootStackParamList,
+  AppStackParamList,
   "CreatePoll"
 >;
 
@@ -26,10 +26,7 @@ export type option = {
   optionText: string;
 };
 
-const optionsStart: option[] = [
-  { optionText: "" },
-  { optionText: "" },
-];
+const optionsStart: option[] = [{ optionText: "" }, { optionText: "" }];
 
 type errorsTypes = {
   titleEmpty: boolean;
@@ -82,7 +79,8 @@ const CreatePollScreen = () => {
       foundErrors.endEmpty = !endTime;
     } else {
       if (endTime < startTime) foundErrors.endBeforeStart = true;
-      if (endTime.getTime() === startTime.getTime()) foundErrors.sameDate = true;
+      if (endTime.getTime() === startTime.getTime())
+        foundErrors.sameDate = true;
     }
     foundErrors.optionsEmpty = options.some((o) => o.optionText.trim() === "");
     setErrors(foundErrors);
@@ -99,14 +97,13 @@ const CreatePollScreen = () => {
     }
 
     try {
-
-      const { data: userData, error: userError } = await supabase.auth.getUser();
+      const { data: userData, error: userError } =
+        await supabase.auth.getUser();
       if (userError || !userData?.user) {
         alert("⚠️ No hay sesión activa");
         setLoading(false);
         return;
       }
-
 
       const { data: pollData, error: pollError } = await supabase
         .from("poll")
@@ -124,7 +121,6 @@ const CreatePollScreen = () => {
         .single();
 
       if (pollError) throw pollError;
-
 
       const optionsToInsert = options.map((opt, index) => ({
         option_text: opt.optionText.trim(),
@@ -200,7 +196,9 @@ const CreatePollScreen = () => {
           </Text>
 
           <View style={{ marginBottom: 12 }}>
-            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
               <DateTimePicker
                 label="Fecha Inicio"
                 value={startTime}
@@ -212,7 +210,9 @@ const CreatePollScreen = () => {
               <DateTimePicker
                 label="Fecha Fin"
                 value={endTime}
-                error={errors.endEmpty || errors.sameDate || errors.endBeforeStart}
+                error={
+                  errors.endEmpty || errors.sameDate || errors.endBeforeStart
+                }
                 setValue={setEndTime}
                 disablePastDates
                 stylesInput={styles.inputHalf}
@@ -278,7 +278,9 @@ const CreatePollScreen = () => {
             ¿Estás seguro que quieres resetear el formulario? {"\n"}
             Toda la información se perderá.
           </Text>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <Button
               mode="elevated"
               onPress={() => setResetVisible(false)}
@@ -286,7 +288,11 @@ const CreatePollScreen = () => {
             >
               Cancelar
             </Button>
-            <Button mode="contained" onPress={resetForm} style={styles.inputHalf}>
+            <Button
+              mode="contained"
+              onPress={resetForm}
+              style={styles.inputHalf}
+            >
               Restablecer
             </Button>
           </View>
@@ -304,7 +310,9 @@ const CreatePollScreen = () => {
           <Text style={styles.text}>
             ¿Estás seguro que quieres publicar la encuesta?
           </Text>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <Button
               mode="elevated"
               onPress={() => setSubmitVisible(false)}

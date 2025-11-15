@@ -15,10 +15,10 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppModal from "../../Components/modal/modal";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
-import { RootStackParamList } from "../../../../App";
 import { supabase } from "../../../../backend/server/supabase";
+import { AppStackParamList } from "../../../../navigation/appStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "PollInterface">;
+type NavigationProp = NativeStackNavigationProp<AppStackParamList, "PollInterface">;
 
 type Poll = {
   id: number;

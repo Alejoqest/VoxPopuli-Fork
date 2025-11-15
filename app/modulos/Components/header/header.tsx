@@ -3,6 +3,7 @@ import { Appbar, Divider, IconButton, Menu } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
 import Logo from "../logo/logo";
+import { authService } from "../../../../backend/services/authService";
 
 const Header = ({
   navigation,
@@ -16,6 +17,11 @@ const Header = ({
   const navigate = (route: string): void => {
     navigation.navigate(route);
     closeMenu();
+  };
+
+  const handleLogout = async () => {
+    await authService.logoutUser();
+    navigation.navigate("Login");
   };
 
   const openMenu = (): void => setVisible(true);
@@ -38,7 +44,7 @@ const Header = ({
           <IconButton icon={"menu"} iconColor="white" onPress={openMenu} />
         }
       >
-        {(back && title !== "Home") ?  (
+        {back && title !== "Home" ? (
           <>
             <Menu.Item
               onPress={() => navigate("Home")}
@@ -49,7 +55,7 @@ const Header = ({
           </>
         ) : null}
         <Menu.Item
-          onPress={() => navigate("Login")}
+          onPress={handleLogout}
           title="Cerrar Sesión"
           leadingIcon="logout"
         />

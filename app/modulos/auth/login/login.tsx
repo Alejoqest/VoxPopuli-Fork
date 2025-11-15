@@ -8,13 +8,14 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { RootStackParamList } from "../../../../App";
 import { supabase } from "../../../../backend/server/supabase";
 import Logo from "../../Components/logo/logo";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import AsyncStorage from "@react-native-async-storage/async-storage"; // 👈 IMPORTANTE
+import { authService } from "../../../../backend/services/authService";
+import { AuthStackParamList } from "../../../../navigation/authStack";
 
-type NavigationProp = NativeStackNavigationProp<RootStackParamList, "Login">;
+type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
 type Errors = {
   usernameEmpty: boolean;
@@ -45,55 +46,18 @@ const LoginScreen = () => {
       return;
     }
 
-    try {
-      let emailToUse = usernameOrEmail;
+    const res = await authService.login(usernameOrEmail, password);
 
-      // Si no es un email, buscamos el email asociado al username
-      if (!/\S+@\S+\.\S+/.test(usernameOrEmail)) {
-        const { data: userData, error: userError } = await supabase
-          .from("Users")
-          .select("email")
-          .eq("username", usernameOrEmail)
-          .maybeSingle();
-
-        if (userError || !userData) {
-          setErrors({ ...initialErrors, credentialsFailed: true });
-          setIsProcessing(false);
-          return;
-        }
-
-        emailToUse = userData.email;
-      }
-
-      // Intentar login
-      const { data, error } = await supabase.auth.signInWithPassword({
-        email: emailToUse,
-        password,
-      });
-
-      if (error || !data.user) {
-        if (error?.message?.includes("Email not confirmed")) {
-          Alert.alert(
-            "Correo no verificado",
-            "Por favor, verifica tu correo electrónico antes de iniciar sesión."
-          );
-        } else {
-          setErrors({ ...initialErrors, credentialsFailed: true });
-        }
-        setIsProcessing(false);
-        return;
-      }
-
-      // ✅ Guardar email para usarlo en BrowsePollsView
-      await AsyncStorage.setItem("userEmail", emailToUse);
-
-      Alert.alert("✅ Sesión iniciada correctamente");
-      navigation.navigate("Home");
-    } catch (err: any) {
-      Alert.alert("Error de conexión", err.message ?? String(err));
-    } finally {
-      setIsProcessing(false);
+    if (res) {
+      Alert.alert(res);
+      console.log(res);
+      setErrors({ ...initialErrors, credentialsFailed: true });
     }
+
+    if (!res) {
+      Alert.alert("✅ Sesión iniciada correctamente");
+    }
+    setIsProcessing(false);
   };
 
   const checkErrors = (): boolean => {
@@ -108,7 +72,14 @@ const LoginScreen = () => {
 
   return (
     <GradientBackground>
-      <View style={{ flex: 1, justifyContent: "center", alignItems: "center", padding: 16 }}>
+      <View
+        style={{
+          flex: 1,
+          justifyContent: "center",
+          alignItems: "center",
+          padding: 16,
+        }}
+      >
         <View style={{ marginBottom: 32 }}>
           <Logo />
         </View>
