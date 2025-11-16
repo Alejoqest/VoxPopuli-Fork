@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Alert } from "react-native";
+import { View, Alert, StyleSheet } from "react-native";
 import {
   TextInput,
   Button,
@@ -8,56 +8,48 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { supabase } from "../../../../backend/server/supabase";
 import Logo from "../../Components/logo/logo";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
-import AsyncStorage from "@react-native-async-storage/async-storage"; // 👈 IMPORTANTE
 import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
+import AuthError from "../../Components/authError/authError";
+import PasswordInput from "../../Components/passwordInput/passwordInput";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
 type Errors = {
   usernameEmpty: boolean;
   passwordEmpty: boolean;
-  credentialsFailed: boolean;
 };
 
 const initialErrors: Errors = {
   usernameEmpty: false,
   passwordEmpty: false,
-  credentialsFailed: false,
 };
 
 const LoginScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Errors>(initialErrors);
+  const [authError, setAuthError] = useState<string | undefined>(undefined);
 
   const handleLogin = async () => {
-    setIsProcessing(true);
+    setLoading(true);
     setErrors(initialErrors);
+    setAuthError(undefined);
 
     if (checkErrors()) {
-      setIsProcessing(false);
+      setLoading(false);
       return;
     }
 
     const res = await authService.login(usernameOrEmail, password);
 
-    if (res) {
-      Alert.alert(res);
-      console.log(res);
-      setErrors({ ...initialErrors, credentialsFailed: true });
-    }
+    if (res) setAuthError(res);
 
-    if (!res) {
-      Alert.alert("✅ Sesión iniciada correctamente");
-    }
-    setIsProcessing(false);
+    setLoading(false);
   };
 
   const checkErrors = (): boolean => {
@@ -72,20 +64,13 @@ const LoginScreen = () => {
 
   return (
     <GradientBackground>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 16,
-        }}
-      >
+      <View style={styles.container}>
         <View style={{ marginBottom: 32 }}>
           <Logo />
         </View>
 
         {/* Usuario o Email */}
-        <View style={{ width: "80%", marginBottom: 12 }}>
+        <View style={styles.input}>
           <TextInput
             label="Usuario o Email"
             mode="outlined"
@@ -93,7 +78,7 @@ const LoginScreen = () => {
             value={usernameOrEmail}
             onChangeText={setUsernameOrEmail}
             autoCapitalize="none"
-            error={errors.usernameEmpty || errors.credentialsFailed}
+            error={errors.usernameEmpty || !!authError}
           />
           {errors.usernameEmpty && (
             <HelperText type="error" visible>
@@ -103,47 +88,30 @@ const LoginScreen = () => {
         </View>
 
         {/* Contraseña */}
-        <View style={{ width: "80%", marginBottom: 12 }}>
-          <TextInput
-            label="Contraseña"
-            mode="outlined"
-            placeholder="Contraseña"
+        <View style={styles.input}>
+          <PasswordInput
             value={password}
-            secureTextEntry={!showPassword}
-            onChangeText={setPassword}
-            autoCapitalize="none"
-            error={errors.passwordEmpty || errors.credentialsFailed}
-            right={
-              <TextInput.Icon
-                icon={showPassword ? "eye" : "eye-off"}
-                onPress={() => setShowPassword(!showPassword)}
-              />
-            }
+            setValue={setPassword}
+            error={errors.passwordEmpty || !!authError}
           />
           {errors.passwordEmpty && (
             <HelperText type="error" visible>
               Introduzca su contraseña
             </HelperText>
           )}
-          {errors.credentialsFailed && (
-            <HelperText type="error" visible>
-              Credenciales incorrectas o cuenta no verificada
-            </HelperText>
-          )}
         </View>
+
+        <AuthError error={authError} setError={setAuthError}/>
 
         {/* Botón Ingresar */}
         <Button
           mode="contained"
-          style={{ width: "80%", marginTop: 12, marginBottom: 16 }}
+          style={styles.button}
           onPress={handleLogin}
-          disabled={isProcessing}
+          loading={loading}
+          disabled={loading}
         >
-          {isProcessing ? (
-            <ActivityIndicator animating color="white" />
-          ) : (
-            "Ingresar"
-          )}
+          Ingresar
         </Button>
 
         <Button mode="text" onPress={() => navigation.navigate("Register")}>
@@ -155,3 +123,14 @@ const LoginScreen = () => {
 };
 
 export default LoginScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  input: { width: "80%", marginBottom: 12 },
+  button: { width: "80%", marginVertical: 12 },
+});

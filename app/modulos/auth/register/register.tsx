@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Alert, View } from "react-native";
+import { Alert, StyleSheet, View } from "react-native";
 import {
   Text,
   TextInput,
@@ -9,11 +9,11 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
+import AuthError from "../../Components/authError/authError";
+import PasswordInput from "../../Components/passwordInput/passwordInput";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Register">;
 
@@ -51,9 +51,9 @@ const RegisterScreen = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<errorsTypes>(startErrors);
+  const [authError, setAuthError] = useState<string | undefined>(undefined);
 
   const checkErrors = (): boolean => {
     let newErrors = { ...startErrors };
@@ -85,38 +85,29 @@ const RegisterScreen = () => {
   };
 
   const handleRegister = async () => {
-    setIsProcessing(true);
+    setLoading(true);
+    setAuthError(undefined);
 
     if (checkErrors()) {
-      setIsProcessing(false);
+      setLoading(false);
       return;
     }
 
     const res = await authService.registerUser(email, password, username);
-    
-    if (res) {
-      Alert.alert(res);
-      console.log(res);
-    }
-    setIsProcessing(false);
+
+    if (res) setAuthError(res);
+    setLoading(false);
   };
 
   return (
     <GradientBackground>
-      <View
-        style={{
-          flex: 1,
-          justifyContent: "center",
-          alignItems: "center",
-          padding: 16,
-        }}
-      >
+      <View style={styles.container}>
         <Text variant="headlineMedium" style={{ marginBottom: 24 }}>
           Crear una cuenta
         </Text>
 
         {/* Nombre de Usuario */}
-        <View style={{ width: "80%", marginBottom: 12 }}>
+        <View style={styles.input}>
           <TextInput
             label="Nombre de Usuario"
             mode="outlined"
@@ -154,7 +145,7 @@ const RegisterScreen = () => {
         </View>
 
         {/* Email */}
-        <View style={{ width: "80%", marginBottom: 12 }}>
+        <View style={styles.input}>
           <TextInput
             label="Email"
             mode="outlined"
@@ -178,27 +169,16 @@ const RegisterScreen = () => {
         </View>
 
         {/* Contraseña */}
-        <View style={{ width: "80%", marginBottom: 12 }}>
-          <TextInput
-            label="Contraseña"
-            mode="outlined"
-            placeholder="Contraseña"
+        <View style={styles.input}>
+          <PasswordInput
             value={password}
-            secureTextEntry={!showPassword}
-            onChangeText={setPassword}
-            autoCapitalize="none"
+            setValue={setPassword}
             error={
               errors.passwordEmpty ||
               errors.passwordFailed ||
               errors.passwordInvalid ||
               errors.passwordMax ||
               errors.passwordMin
-            }
-            right={
-              <TextInput.Icon
-                icon={showPassword ? "eye" : "eye-off"}
-                onPress={() => setShowPassword(!showPassword)}
-              />
             }
           />
           {errors.passwordEmpty && (
@@ -224,22 +204,12 @@ const RegisterScreen = () => {
         </View>
 
         {/* Repetir contraseña */}
-        <View style={{ width: "80%", marginBottom: 24 }}>
-          <TextInput
+        <View style={styles.input}>
+          <PasswordInput
             label="Repita la contraseña"
-            mode="outlined"
-            placeholder="Contraseña"
             value={repeatPassword}
-            secureTextEntry={!showPassword}
-            onChangeText={setRepeatPassword}
-            autoCapitalize="none"
+            setValue={setRepeatPassword}
             error={errors.passwordEmpty || errors.passwordFailed}
-            right={
-              <TextInput.Icon
-                icon={showPassword ? "eye" : "eye-off"}
-                onPress={() => setShowPassword(!showPassword)}
-              />
-            }
           />
           {errors.passwordFailed && (
             <HelperText type="error" visible>
@@ -248,14 +218,16 @@ const RegisterScreen = () => {
           )}
         </View>
 
+        <AuthError error={authError} setError={setAuthError}/>
+
         {/* Botón Registrar */}
         <Button
           mode="contained"
-          style={{ width: "80%", marginBottom: 16 }}
+          style={styles.button}
           onPress={handleRegister}
-          disabled={isProcessing}
+          disabled={loading}
         >
-          {isProcessing ? (
+          {loading ? (
             <ActivityIndicator animating color="white" />
           ) : (
             "Registrar"
@@ -271,3 +243,14 @@ const RegisterScreen = () => {
 };
 
 export default RegisterScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  input: { width: "80%", marginBottom: 12 },
+  button: { width: "80%", marginVertical: 12 },
+});
