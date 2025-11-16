@@ -1,11 +1,6 @@
 import React, { useState } from "react";
-import { View, Alert, StyleSheet } from "react-native";
-import {
-  TextInput,
-  Button,
-  ActivityIndicator,
-  HelperText,
-} from "react-native-paper";
+import { View, StyleSheet } from "react-native";
+import { TextInput, Button, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import Logo from "../../Components/logo/logo";
@@ -100,8 +95,7 @@ const LoginScreen = () => {
             </HelperText>
           )}
         </View>
-
-        <AuthError error={authError} setError={setAuthError}/>
+        <AuthError error={authError} setError={setAuthError} />
 
         {/* Botón Ingresar */}
         <Button

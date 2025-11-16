@@ -1,12 +1,6 @@
 import React, { useState } from "react";
-import { Alert, StyleSheet, View } from "react-native";
-import {
-  Text,
-  TextInput,
-  Button,
-  ActivityIndicator,
-  HelperText,
-} from "react-native-paper";
+import { StyleSheet, View } from "react-native";
+import { Text, TextInput, Button, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import GradientBackground from "../../Components/gradientBackground/gradientBackground";
@@ -218,7 +212,7 @@ const RegisterScreen = () => {
           )}
         </View>
 
-        <AuthError error={authError} setError={setAuthError}/>
+        <AuthError error={authError} setError={setAuthError} />
 
         {/* Botón Registrar */}
         <Button
@@ -226,12 +220,9 @@ const RegisterScreen = () => {
           style={styles.button}
           onPress={handleRegister}
           disabled={loading}
+          loading={loading}
         >
-          {loading ? (
-            <ActivityIndicator animating color="white" />
-          ) : (
-            "Registrar"
-          )}
+          Registrar
         </Button>
 
         <Button mode="text" onPress={() => navigation.navigate("Login")}>
