@@ -1,4 +1,4 @@
-export const chartColors = [
+export const Colors = [
   "#F43F5E", // Vibrant Red
   "#3B82F6", // Bright Blue
   "#22C55E", // Emerald Green

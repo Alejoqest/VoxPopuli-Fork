@@ -12,7 +12,7 @@ import GradientBackground from "../../components/gradientBackground/gradientBack
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
 import { supabase } from "../../../../backend/server/supabase";
-import { chartColors } from "./colors";
+import { Colors } from "../../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 
@@ -138,7 +138,7 @@ const PollResultsScreen = () => {
                 style={[styles.surface, styles.textSuface, { flexDirection: "row", justifyContent: "space-between", alignItems: "center" }]}
               >
                 <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <IconButton icon="circle-outline" containerColor={chartColors[i]} />
+                  <IconButton icon="circle-outline" containerColor={Colors[i]} />
                   <Text variant="titleMedium">
                     {v.optionName + "\n"}
                     {v.numVotes} Votos

@@ -1,5 +1,5 @@
 import { Session } from "@supabase/supabase-js";
-import { chartColors } from "../../app/modulos/screens/pollResults/colors";
+import { Colors } from "../../app/constants/colors";
 import { supabase } from "../server/supabase";
 
 export const authService = {
@@ -33,7 +33,7 @@ export const authService = {
         if (!user) return ("User no retornado");
 
         const i = Math.floor(Math.random() * 10);
-        const color = chartColors[i];
+        const color = Colors[i];
 
         const { error: profileError } = await supabase.from('profile').insert({
             id: user.id,
