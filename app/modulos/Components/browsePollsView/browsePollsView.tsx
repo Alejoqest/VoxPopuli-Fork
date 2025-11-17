@@ -1,14 +1,14 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { Poll } from "../../screens/browsePolls/browsePolls";
-import { Card, Divider, Text } from "react-native-paper";
-import BrowsePollsCard from "../browsePollsCard/browsePollsCard";
+import { Divider, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../../../../App";
+import { AppStackParamList } from "../../../../navigation/appStack";
+import BrowsePollsCard from "../browsePollsCard/browsePollsCard";
+import { Poll } from "../../models/Polls";
 
 type props = {
   polls: Poll[];
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: NavigationProp<AppStackParamList>;
 };
 
 const browsePollsView = ({ polls, navigation }: props) => {

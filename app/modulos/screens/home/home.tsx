@@ -3,7 +3,6 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Button, Avatar } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import { Poll } from "../browsePolls/browsePolls";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { User } from "@supabase/supabase-js";
@@ -11,6 +10,8 @@ import { authService } from "../../../../backend/services/authService";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Profile } from "../../models/Profile";
 import { profileService } from "../../../../backend/services/profileService";
+import { pollService } from "../../../../backend/services/pollService";
+import { Poll } from "../../models/Polls";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
 
@@ -36,6 +37,8 @@ const HomeScreen = () => {
       const data = await profileService.getUser(user.id);
       setProfile(data);
       setLoading(false);
+      const poll = await pollService.getPollsByUserId(user.id);
+      setPolls(poll);
     };
     loadProfile();
   }, [user]);
@@ -62,7 +65,6 @@ const HomeScreen = () => {
             size={120}
             label={profile.username.slice(0, 1)}
             style={{ marginTop: 32, marginBottom: 16, backgroundColor: profile.color }}
-            //={profile.color}
           />
           <View style={{ marginBottom: 16 }}>
             <Text variant="headlineMedium" style={{ textAlign: "center" }}>

@@ -8,21 +8,12 @@ import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { supabase } from "../../../../backend/server/supabase";
 import { AppStackParamList } from "../../../../navigation/appStack";
+import { Poll } from "../../models/Polls";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
   "BrowsePoll"
 >;
-
-export type Poll = {
-  id: number;
-  title: string;
-  start_time: Date;
-  end_time: Date;
-  status: "active" | "closed";
-  creator_name: string;
-  creator_id: number;
-};
 
 const BrowsePollsScreen = () => {
   const navigation = useNavigation<NavigationProp>();

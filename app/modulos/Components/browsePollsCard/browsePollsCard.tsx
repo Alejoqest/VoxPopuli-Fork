@@ -1,15 +1,15 @@
 import React from "react";
-import { Poll } from "../../screens/browsePolls/browsePolls";
 import { View, StyleSheet } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
-import { RootStackParamList } from "../../../../App";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AppStackParamList } from "../../../../navigation/appStack";
+import { Poll } from "../../models/Polls";
 
 type props = {
   poll: Poll;
   statusColor: string;
-  navigation: NavigationProp<RootStackParamList>;
+  navigation: NavigationProp<AppStackParamList>;
 };
 
 const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
@@ -30,7 +30,7 @@ const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
         title={poll.title}
         titleNumberOfLines={3}
         titleVariant="titleLarge"
-        subtitle={"Creado por: " + poll.creator_name}
+        subtitle={"Creado por: " + poll.profile.username}
         subtitleVariant="titleSmall"
         style={styles.title}
         right={() => (
