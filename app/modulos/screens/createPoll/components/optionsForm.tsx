@@ -1,14 +1,11 @@
 import React from "react";
 import { StyleSheet } from "react-native";
 import { Text, TextInput, Button, HelperText } from "react-native-paper";
-
-type Option = {
-  optionText: string;
-};
+import { OptionCreated } from "../../../models/Options";
 
 type Props = {
-  options: Option[];
-  setOptions: React.Dispatch<React.SetStateAction<Option[]>>;
+  options: OptionCreated[];
+  setOptions: React.Dispatch<React.SetStateAction<OptionCreated[]>>;
   error?: boolean;
 };
 

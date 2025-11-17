@@ -16,17 +16,16 @@ import AppModal from "../../components/modal/modal";
 import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { AppStackParamList } from "../../../../navigation/appStack";
+import { pollService } from "../../../../backend/services/pollService";
+import { authService } from "../../../../backend/services/authService";
+import { OptionCreated } from "../../models/Options";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
   "CreatePoll"
 >;
 
-export type option = {
-  optionText: string;
-};
-
-const optionsStart: option[] = [{ optionText: "" }, { optionText: "" }];
+const optionsStart: OptionCreated[] = [{ optionText: "" }, { optionText: "" }];
 
 type errorsTypes = {
   titleEmpty: boolean;
@@ -54,7 +53,7 @@ const CreatePollScreen = () => {
   const [description, setDescription] = useState("");
   const [startTime, setStartTime] = useState<Date | null>(null);
   const [endTime, setEndTime] = useState<Date | null>(null);
-  const [options, setOptions] = useState<option[]>(optionsStart);
+  const [options, setOptions] = useState<OptionCreated[]>(optionsStart);
   const [notify, setNotify] = useState(false);
   const [errors, setErrors] = useState<errorsTypes>(errorsStart);
   const [resetVisible, setResetVisible] = useState(false);
@@ -97,42 +96,16 @@ const CreatePollScreen = () => {
     }
 
     try {
-      const { data: userData, error: userError } =
-        await supabase.auth.getUser();
-      if (userError || !userData?.user) {
-        alert("⚠️ No hay sesión activa");
-        setLoading(false);
-        return;
-      }
-
-      const { data: pollData, error: pollError } = await supabase
-        .from("poll")
-        .insert([
-          {
-            title,
-            description,
-            start_time: startTime?.toISOString(),
-            end_time: endTime?.toISOString(),
-            status: "active",
-            creator_id_new: userData.user.id,
-          },
-        ])
-        .select("id")
-        .single();
-
-      if (pollError) throw pollError;
-
-      const optionsToInsert = options.map((opt, index) => ({
-        option_text: opt.optionText.trim(),
-        option_order: index + 1,
-        poll_id: pollData.id,
-      }));
-
-      const { error: optionError } = await supabase
-        .from("option")
-        .insert(optionsToInsert);
-
-      if (optionError) throw optionError;
+      const data = await pollService.insertPoll(
+        {
+          title,
+          description,
+          start_time: startTime!.toISOString(),
+          end_time: endTime!.toISOString(),
+          status: "active",
+        },
+        options
+      );
 
       alert(`✅ Encuesta "${title}" creada correctamente`);
       resetForm();

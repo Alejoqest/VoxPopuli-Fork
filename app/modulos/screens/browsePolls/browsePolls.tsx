@@ -6,9 +6,9 @@ import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { supabase } from "../../../../backend/server/supabase";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
+import { pollService } from "../../../../backend/services/pollService";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -41,35 +41,11 @@ const BrowsePollsScreen = () => {
   };
 
   const changeSearch = async () => {
-    if (search === "") {
-      try {
-        const { data: pollsData, error: pollsError } = await supabase
-          .from("poll")
-          .select("*")
-
-        if (pollsError) {
-          console.error("Error obteniendo encuestas:", pollsError.message);
-        } else {
-          setPolls(pollsData || []);
-        }
-      } catch (err) {
-        console.log(err);
-      }
-    }
-
     const text = search.toLowerCase();
 
     try {
-      const { data: pollsData, error: pollsError } = await supabase
-        .from("poll")
-        .select("*")
-        .ilike("title", `%${text}%`)
-
-      if (pollsError) {
-        console.error("Error obteniendo encuestas:", pollsError.message);
-      } else {
-        setPolls(pollsData || []);
-      }
+      const data = await pollService.getPolls(text);
+      setPolls(data);
     } catch (err) {
       console.log(err);
     }

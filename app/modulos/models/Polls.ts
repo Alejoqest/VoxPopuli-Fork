@@ -21,8 +21,9 @@ export type PollUser = {
 
 export type PollInsert = {
     title: string;
-    start_time: Date;
-    end_time: Date;
+    description: string;
+    start_time: string;
+    end_time: string;
     status: "active" | "closed";
-    creator_id: number;
+    creator_id?: string;
 }
