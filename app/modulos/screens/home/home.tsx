@@ -5,12 +5,12 @@ import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import { Poll } from "../browsePolls/browsePolls";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
-import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { User } from "@supabase/supabase-js";
 import { authService } from "../../../../backend/services/authService";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Profile } from "../../models/Profile";
+import { profileService } from "../../../../backend/services/profileService";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
 
@@ -33,16 +33,9 @@ const HomeScreen = () => {
   useEffect(() => {
     if (!user) return;
     const loadProfile = async () => {
-      const { data } = await supabase
-        .from("profile")
-        .select("*")
-        .eq("id", user.id)
-        .single();
-
-      if (data) {
-        setProfile(data);
-        setLoading(false);
-      }
+      const data = await profileService.getUser(user.id);
+      setProfile(data);
+      setLoading(false);
     };
     loadProfile();
   }, [user]);
