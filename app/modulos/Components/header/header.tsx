@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import { Appbar, Divider, IconButton, Menu } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
-import Logo from "../logo/logo";
 import { authService } from "../../../../backend/services/authService";
+import Logo from "../logo/logo";
 
 const Header = ({
   navigation,

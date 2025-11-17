@@ -8,7 +8,7 @@ import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
 import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
-import Logo from "../../Components/logo/logo";
+import Logo from "../../components/logo/logo";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
