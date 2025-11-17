@@ -10,15 +10,9 @@ import GradientBackground from "../../components/gradientBackground/gradientBack
 import { User } from "@supabase/supabase-js";
 import { authService } from "../../../../backend/services/authService";
 import { AppStackParamList } from "../../../../navigation/appStack";
+import { Profile } from "../../models/Profile";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
-
-type Profile = {
-  id: string;
-  username: string;
-  email: string;
-  color: string;
-};
 
 const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -55,7 +49,6 @@ const HomeScreen = () => {
 
   const handleLogout = async () => {
     await authService.logoutUser();
-    navigation.navigate("Login");
   };
 
   if (loading || !user || !profile) {
