@@ -3,12 +3,12 @@ import { View, StyleSheet } from "react-native";
 import { TextInput, Button, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import Logo from "../../Components/logo/logo";
-import GradientBackground from "../../Components/gradientBackground/gradientBackground";
+import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
-import AuthError from "../../Components/authError/authError";
-import PasswordInput from "../../Components/passwordInput/passwordInput";
+import AuthError from "../../components/authError/authError";
+import PasswordInput from "../../components/passwordInput/passwordInput";
+import Logo from "../../Components/logo/logo";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 

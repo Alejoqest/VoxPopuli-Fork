@@ -13,8 +13,8 @@ import {
 } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import AppModal from "../../Components/modal/modal";
-import GradientBackground from "../../Components/gradientBackground/gradientBackground";
+import AppModal from "../../components/modal/modal";
+import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { supabase } from "../../../../backend/server/supabase";
 import { AppStackParamList } from "../../../../navigation/appStack";
 

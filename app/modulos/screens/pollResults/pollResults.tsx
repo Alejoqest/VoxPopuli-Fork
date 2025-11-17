@@ -8,7 +8,7 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import GradientBackground from "../../Components/gradientBackground/gradientBackground";
+import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
 import { supabase } from "../../../../backend/server/supabase";

@@ -1,7 +1,7 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import React, { lazy } from "react";
 
-const Header = lazy(() => import('../app/modulos/Components/header/header'));
+const Header = lazy(() => import('../app/modulos/components/header/header'));
 const HomeScreen = lazy(() => import('../app/modulos/screens/home/home'));
 const CreatePollScreen = lazy(() => import('../app/modulos/screens/createPoll/createPoll'));
 const PollInterfaceScreen = lazy(() => import('../app/modulos/screens/pollInterface/pollInterface'));
