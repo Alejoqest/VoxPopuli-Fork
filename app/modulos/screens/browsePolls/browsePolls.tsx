@@ -49,15 +49,6 @@ const BrowsePollsScreen = () => {
     } catch (err) {
       console.log(err);
     }
-
-    /*newPolls = newPolls.filter((v) => {
-      return (
-        v.title.toLowerCase().includes(text) ||
-        v.creator_name.toLowerCase().includes(text)
-      );
-    });
-
-    setPolls(newPolls);*/
   };
 
   return (

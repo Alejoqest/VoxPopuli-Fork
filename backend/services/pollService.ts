@@ -23,7 +23,31 @@ export const pollService = {
                 `title.ilike.%${text}%`
             )
             .or(`username.ilike.%${text}%`, { foreignTable: "profile" });
-            //.or(`title.ilike.%${text}%,profile.username.ilike.%${text}%`)
+        //.or(`title.ilike.%${text}%,profile.username.ilike.%${text}%`)
+
+        if (error) throw new Error(error.message);
+
+        return data || [];
+    },
+
+    getPollById: async (id: number): Promise<Poll> => {
+        const { data, error } = await supabase
+            .from('poll')
+            .select("*, profile(id, username, color)")
+            .eq('id', id)
+            .single();
+
+        if (error) throw new Error(error.message);
+
+        return data;
+    },
+
+    getOptionsByPoll: async (id: number): Promise<Option[]> => {
+        const { data, error } = await supabase
+            .from('option')
+            .select('*')
+            .eq('poll_id', id)
+            .order("option_order", { ascending: true });
 
         if (error) throw new Error(error.message);
 

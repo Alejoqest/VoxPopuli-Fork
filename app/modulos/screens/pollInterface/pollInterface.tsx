@@ -15,28 +15,14 @@ import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppModal from "../../components/modal/modal";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
-import { supabase } from "../../../../backend/server/supabase";
 import { AppStackParamList } from "../../../../navigation/appStack";
+import { Option } from "../../models/Options";
+import { Poll } from "../../models/Polls";
+import { pollService } from "../../../../backend/services/pollService";
+import { voteService } from "../../../../backend/services/voteService";
+import { Vote } from "../../models/Vote";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "PollInterface">;
-
-type Poll = {
-  id: number;
-  title: string;
-  description: string;
-  start_time: string;
-  end_time: string;
-  status: "active" | "closed";
-  creator?: {
-    username: string;
-  };
-};
-
-type Option = {
-  id: number;
-  option_text: string;
-  option_order: number;
-};
 
 type RemainingTime = {
   hours: number;
@@ -60,86 +46,23 @@ const PollInterfaceScreen = () => {
       if (!storedId) return console.warn("No se encontró ID de la encuesta");
       const pollId = parseInt(storedId, 10);
 
-      // Traer encuesta
-      const { data: pollData, error: pollError } = await supabase
-        .from("poll")
-        .select("*")
-        .eq("id", pollId)
-        .maybeSingle();
-      if (pollError || !pollData) return console.error("Error obteniendo la encuesta:", pollError?.message);
+      const data = await pollService.getPollById(pollId);
 
-      // Traer el email del creador
-      if (pollData.creator_id_new) {
-        const { data: creatorData, error: creatorError } = await supabase
-          .from("user_ids")
-          .select("email")
-          .eq("id", pollData.creator_id_new)
-          .maybeSingle();
+      const options = await pollService.getOptionsByPoll(pollId);
 
-        if (!creatorError && creatorData) {
-          pollData.creator = { username: creatorData.email };
-        }
-      }
+      const vote = await voteService.getVote(pollId);
 
-      setPoll(pollData);
-
-      // Traer opciones
-      const { data: optionsData, error: optionsError } = await supabase
-        .from("option")
-        .select("*")
-        .eq("poll_id", pollId)
-        .order("option_order", { ascending: true });
-      if (optionsError) console.error("Error obteniendo opciones:", optionsError.message);
-      else setOptions(optionsData || []);
-
-      // Verificar si el usuario ya votó en esta encuesta
-      const email = await AsyncStorage.getItem("userEmail");
-
-      // Primero verificar en AsyncStorage (UI optimista)
-      const cachedVote = await AsyncStorage.getItem(`vote_poll_${pollId}`);
-      if (cachedVote) {
+      if (vote) {
+        const votedOption = options?.find((opt) => opt.id === vote.option_id);
         setHasVoted(true);
-        setChecked(cachedVote);
-        console.log("Voto encontrado en caché local");
+        setChecked(String(votedOption!.option_order));
       }
 
-      // Luego verificar en el backend
-      if (email) {
-        const { data: userData, error: userError } = await supabase
-          .from("user_ids")
-          .select("id")
-          .eq("email", email)
-          .maybeSingle();
-
-        if (!userError && userData) {
-          const { data: voteData, error: voteError } = await supabase
-            .from("vote")
-            .select("option_id")
-            .eq("poll_id", pollId)
-            .eq("user_id", userData.id)
-            .maybeSingle();
-
-          if (!voteError && voteData) {
-            setHasVoted(true);
-
-            // Encontrar el option_order de la opción votada
-            const votedOption = optionsData?.find(opt => opt.id === voteData.option_id);
-            if (votedOption) {
-              const optionOrder = String(votedOption.option_order);
-              setChecked(optionOrder);
-
-              // Guardar en caché local
-              await AsyncStorage.setItem(`vote_poll_${pollId}`, optionOrder);
-            }
-
-            console.log("El usuario ya votó en esta encuesta");
-          }
-        }
-      }
-
+      setOptions(options);
+      setPoll(data);
     } catch (err) {
       console.error("Error general:", err);
-    }
+    } 
   }, []);
 
   const updateRemainingTime = useCallback(() => {
@@ -159,57 +82,25 @@ const PollInterfaceScreen = () => {
     return () => clearInterval(interval);
   }, [updateRemainingTime]);
 
+  // 🔹 Verificar si ya votó (doble verificación)
+  // 🔹 Encontrar opción seleccionada
+  // 🔹 Insertar voto en el backend
   const handleVoting = async () => {
     setVotingVisible(false);
     if (!checked) { setError(true); return; }
     setError(false);
 
     try {
-      // 🔹 Traer user_id desde user_ids usando el email
-      const email = await AsyncStorage.getItem("userEmail");
-      if (!email) throw new Error("No se encontró email del usuario");
-
-      const { data: userData, error: userError } = await supabase
-        .from("user_ids")
-        .select("id")
-        .eq("email", email)
-        .maybeSingle();
-
-      if (userError || !userData) throw new Error("No se pudo obtener user_id");
-      const userId = userData.id;
-
-      // 🔹 Verificar si ya votó (doble verificación)
-      const { data: existingVote, error: checkError } = await supabase
-        .from("vote")
-        .select("id")
-        .eq("poll_id", poll!.id)
-        .eq("user_id", userId)
-        .maybeSingle();
-
-      if (!checkError && existingVote) {
-        setHasVoted(true);
-        console.warn("El usuario ya ha votado en esta encuesta");
-        return;
+      const votedOption = options!.find((opt) => String(opt.option_order) === checked);
+      
+      const vote : Vote = {
+        poll_id: poll!.id,
+        option_id: votedOption!.id!,
       }
 
-      // 🔹 Encontrar opción seleccionada
-      const selectedOption = options.find(opt => String(opt.option_order) === checked);
-      if (!selectedOption) throw new Error("Opción seleccionada no encontrada");
+      await voteService.insertVote(vote);
 
-      // 🔹 Guardar en caché local primero (UI optimista)
-      await AsyncStorage.setItem(`vote_poll_${poll!.id}`, checked);
       setHasVoted(true);
-
-      // 🔹 Insertar voto en el backend
-      const { error: insertError } = await supabase.from("vote").insert([
-        {
-          poll_id: poll!.id,
-          option_id: selectedOption.id,
-          user_id: userId,
-        },
-      ]);
-
-      if (insertError) throw insertError;
 
       console.log("Voto registrado correctamente");
     } catch (err) {
@@ -229,9 +120,9 @@ const PollInterfaceScreen = () => {
         <Text variant="headlineLarge" style={styles.title}>{poll.title}</Text>
 
         <View style={styles.creatorContainer}>
-          <Avatar.Text size={28} label={poll.creator?.username?.[0] || "U"} />
+          <Avatar.Text size={28} label={poll.profile?.username?.[0] || "U"} />
           <Text variant="bodyMedium" style={styles.creator}>
-            Creado por {poll.creator?.username || "Desconocido"}
+            Creado por {poll.profile?.username || "Desconocido"}
           </Text>
         </View>
 
