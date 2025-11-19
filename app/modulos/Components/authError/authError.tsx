@@ -43,6 +43,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingHorizontal: 16,
-    borderRadius: "8px",
+    borderRadius: 8,
   },
 });

@@ -10,3 +10,8 @@ export const Colors = [
   "#14B8A6", // Teal
   "#8B5CF6", // Violet
 ];
+
+export const ExtraColors = {
+  empty: "#555555ff"
+}
+

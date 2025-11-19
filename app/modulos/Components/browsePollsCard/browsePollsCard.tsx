@@ -5,6 +5,7 @@ import { NavigationProp } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
+import AvatarIcon from "../avatarIcon/avatarIcon";
 
 type props = {
   poll: Poll;
@@ -33,6 +34,7 @@ const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
         subtitle={"Creado por: " + poll.profile.username}
         subtitleVariant="titleSmall"
         style={styles.title}
+        left={() => <AvatarIcon size={35} profile={poll.profile}/>}
         right={() => (
           <View
             style={{
@@ -84,8 +86,9 @@ export default browsePollsCard;
 
 const styles = StyleSheet.create({
   title: {
-    marginTop: 16,
+    marginTop: 8,
     marginBottom: 8,
+    marginLeft: 8
   },
   text: {
     marginBottom: 16,

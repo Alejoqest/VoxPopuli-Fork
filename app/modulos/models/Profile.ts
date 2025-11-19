@@ -5,3 +5,8 @@ export type Profile = {
   color: string;
 };
 
+export type ProfileAvatar = {
+  id: string;
+  username: string;
+  color: string;
+}

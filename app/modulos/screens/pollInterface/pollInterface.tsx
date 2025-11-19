@@ -21,6 +21,7 @@ import { Poll } from "../../models/Polls";
 import { pollService } from "../../../../backend/services/pollService";
 import { voteService } from "../../../../backend/services/voteService";
 import { Vote } from "../../models/Vote";
+import AvatarIcon from '../../components/avatarIcon/avatarIcon'
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "PollInterface">;
 
@@ -120,7 +121,7 @@ const PollInterfaceScreen = () => {
         <Text variant="headlineLarge" style={styles.title}>{poll.title}</Text>
 
         <View style={styles.creatorContainer}>
-          <Avatar.Text size={28} label={poll.profile?.username?.[0] || "U"} />
+          <AvatarIcon size={32} profile={poll.profile}/>
           <Text variant="bodyMedium" style={styles.creator}>
             Creado por {poll.profile?.username || "Desconocido"}
           </Text>
