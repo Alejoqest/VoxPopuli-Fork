@@ -47,18 +47,9 @@ const AppStack = () => {
       initialRouteName={"Home"}
     >
       <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen
-        name="CreatePoll"
-        component={CreatePollScreen} // Avoid lazy-loading
-      />
-      <Stack.Screen
-        name="PollInterface"
-        component={PollInterfaceScreen} // Avoid lazy-loading
-      />
-      <Stack.Screen
-        name="PollResults"
-        component={PollResultsScreen} // Avoid lazy-loading
-      />
+      <Stack.Screen name="CreatePoll" component={CreatePollScreen} />
+      <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
+      <Stack.Screen name="PollResults" component={PollResultsScreen} />
       <Stack.Screen name="BrowsePoll" component={BrowsePollsScreen} />
     </Stack.Navigator>
   );
