@@ -12,6 +12,7 @@ import { Profile } from "../../models/Profile";
 import { profileService } from "../../../../backend/services/profileService";
 import { pollService } from "../../../../backend/services/pollService";
 import { Poll } from "../../models/Polls";
+import Loading from "../../components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
 
@@ -25,13 +26,20 @@ const HomeScreen = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const session = await authService.getSession();
-      setUser(session?.user ?? null);
+      const session = await authService.getSession().then((s) => s?.user);
+      setUser(session ?? null);
+      if (session) {
+        const data = await profileService.getUser(session.id);
+        setProfile(data);
+        setLoading(false);
+        const poll = await pollService.getPollsByUserId(session.id);
+        setPolls(poll);
+      }
     };
     load();
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     if (!user) return;
     const loadProfile = async () => {
       const data = await profileService.getUser(user.id);
@@ -41,21 +49,13 @@ const HomeScreen = () => {
       setPolls(poll);
     };
     loadProfile();
-  }, [user]);
+  }, [user]);*/
 
   const handleLogout = async () => {
     await authService.logoutUser();
   };
 
-  if (loading || !user || !profile) {
-    return (
-      <GradientBackground>
-        <View style={styles.center}>
-          <Text>Cargando usuario...</Text>
-        </View>
-      </GradientBackground>
-    );
-  }
+  if (loading || !user || !profile) return <Loading />;
 
   return (
     <GradientBackground>
@@ -64,7 +64,11 @@ const HomeScreen = () => {
           <Avatar.Text
             size={120}
             label={profile.username.slice(0, 1)}
-            style={{ marginTop: 32, marginBottom: 16, backgroundColor: profile.color }}
+            style={{
+              marginTop: 32,
+              marginBottom: 16,
+              backgroundColor: profile.color,
+            }}
           />
           <View style={{ marginBottom: 16 }}>
             <Text variant="headlineMedium" style={{ textAlign: "center" }}>

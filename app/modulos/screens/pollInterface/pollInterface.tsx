@@ -22,6 +22,7 @@ import { pollService } from "../../../../backend/services/pollService";
 import { voteService } from "../../../../backend/services/voteService";
 import { Vote } from "../../models/Vote";
 import AvatarIcon from "../../components/avatarIcon/avatarIcon";
+import Loading from "../../components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -125,7 +126,7 @@ const PollInterfaceScreen = ({ route }: props) => {
     }
   };
 
-  if (!poll) return <Text>Cargando encuesta...</Text>;
+  if (!poll) return <Loading/>;
 
   return (
     <GradientBackground>

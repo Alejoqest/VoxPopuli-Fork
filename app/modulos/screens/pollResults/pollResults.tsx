@@ -19,6 +19,7 @@ import { pollService } from "../../../../backend/services/pollService";
 import { PollResult } from "../../models/Polls";
 import { VoteResult } from "../../models/Vote";
 import { RouteProp } from "@react-navigation/native";
+import Loading from "../../components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -84,9 +85,7 @@ const PollResultsScreen = ({route} : props) => {
     };
   }, []);
 
-  const sum = (votes: any[]) => votes.reduce((acc, v) => acc + v.numVotes, 0);
-
-  if (!poll) return <Text>Cargando resultados...</Text>;
+  if (!poll || !votes) return <Loading/>;
 
   return (
     <GradientBackground>
