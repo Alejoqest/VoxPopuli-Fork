@@ -1,4 +1,4 @@
-import { Vote } from "../../app/modulos/models/Vote";
+import { Vote, VoteResult } from "../../app/modulos/models/Vote";
 import { supabase } from "../server/supabase";
 import { authService } from "./authService";
 
@@ -13,6 +13,44 @@ export const voteService = {
         if (error) throw new Error(error.message);
 
         return data;
+    },
+
+    getResults: async (pollId: number): Promise<VoteResult[]> => {
+        const { data, error } = await supabase
+            .from("vote_view")
+            .select("*")
+            .eq("poll_id", pollId)
+            .order("optionOrder", { ascending: true });
+
+        if (error) {
+            console.error("Error loading results", error);
+            return [];
+        }
+
+        return data ?? [];
+    },
+
+    onVotesChange(pollId: number, callback: () => void) {
+        const channel = supabase
+            .channel(`poll_votes_${pollId}`)
+            .on(
+                "postgres_changes",
+                {
+                    schema: "public",
+                    table: "vote",
+                    event: "*",
+                    filter: `poll_id=eq.${pollId}`,
+                },
+                payload => {
+                    callback(); // notify UI
+                }
+            )
+            .subscribe();
+
+        // 🔥 return proper unsubscribe
+        return () => {
+            supabase.removeChannel(channel);
+        };
     },
 
 

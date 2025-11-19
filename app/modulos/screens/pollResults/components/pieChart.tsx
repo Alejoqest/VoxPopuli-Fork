@@ -1,13 +1,14 @@
 import React from "react";
-import { Vote, Poll } from "../pollResults";
+import { Vote } from "../pollResults";
 import PieChart, { Slice } from "react-native-pie-chart";
 import { Colors } from "../../../../constants/colors";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
+import { PollResult } from "../../../models/Polls";
 
 type props = {
   votes: Vote[];
-  poll: Poll;
+  poll: PollResult;
 };
 
 const pieChart = ({ votes, poll }: props) => {

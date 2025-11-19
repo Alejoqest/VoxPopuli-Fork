@@ -1,5 +1,5 @@
 import { Option, OptionCreated } from "../../app/modulos/models/Options";
-import { Poll, PollInsert } from "../../app/modulos/models/Polls";
+import { Poll, PollInsert, PollResult } from "../../app/modulos/models/Polls";
 import { supabase } from "../server/supabase";
 import { authService } from "./authService";
 
@@ -34,6 +34,18 @@ export const pollService = {
         const { data, error } = await supabase
             .from('poll')
             .select("*, profile(id, username, color)")
+            .eq('id', id)
+            .single();
+
+        if (error) throw new Error(error.message);
+
+        return data;
+    },
+
+    getPollResult: async (id :number) : Promise<PollResult> => {
+        const { data, error } = await supabase
+            .from('poll')
+            .select("*")
             .eq('id', id)
             .single();
 

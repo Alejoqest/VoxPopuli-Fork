@@ -12,6 +12,12 @@ export type Poll = {
     }
 };
 
+export type PollResult = {
+    id: number;
+    title: string;
+    totalVotes?: number;
+}
+
 export type PollUser = {
     id: number;
     title: string;
