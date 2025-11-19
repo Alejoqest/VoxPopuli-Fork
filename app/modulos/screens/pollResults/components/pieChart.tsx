@@ -1,6 +1,6 @@
 import React from "react";
 import PieChart, { Slice } from "react-native-pie-chart";
-import { Colors } from "../../../../constants/colors";
+import { Colors, ExtraColors } from "../../../../constants/colors";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
 import { PollResult } from "../../../models/Polls";
@@ -24,12 +24,23 @@ const pieChart = ({ votes, poll }: props) => {
 
   return (
     <View style={{ alignItems: "center", justifyContent: "center" }}>
-      <PieChart
-        widthAndHeight={150}
-        series={convertSlices(votes)}
-        cover={0.3}
-        padAngle={0.05}
-      />
+      {poll.totalVotes == 0 ? (
+        <PieChart
+          widthAndHeight={150}
+          series={[
+            { value: 1, color: ExtraColors.empty },
+            { value: 1, color: ExtraColors.empty },
+          ]}
+          cover={0.3}
+        />
+      ) : (
+        <PieChart
+          widthAndHeight={150}
+          series={convertSlices(votes)}
+          cover={0.3}
+          padAngle={0.05}
+        />
+      )}
       <View
         style={{
           marginTop: 20,
