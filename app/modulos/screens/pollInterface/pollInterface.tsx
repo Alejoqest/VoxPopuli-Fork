@@ -11,7 +11,7 @@ import {
   Surface,
   Text,
 } from "react-native-paper";
-import { useNavigation } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppModal from "../../components/modal/modal";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
@@ -21,21 +21,31 @@ import { Poll } from "../../models/Polls";
 import { pollService } from "../../../../backend/services/pollService";
 import { voteService } from "../../../../backend/services/voteService";
 import { Vote } from "../../models/Vote";
-import AvatarIcon from '../../components/avatarIcon/avatarIcon'
+import AvatarIcon from "../../components/avatarIcon/avatarIcon";
 
-type NavigationProp = NativeStackNavigationProp<AppStackParamList, "PollInterface">;
+type NavigationProp = NativeStackNavigationProp<
+  AppStackParamList,
+  "PollInterface"
+>;
+
+type props = {
+  route: RouteProp<AppStackParamList, "PollInterface">;
+};
 
 type RemainingTime = {
   hours: number;
   minutes: number;
 };
 
-const PollInterfaceScreen = () => {
+const PollInterfaceScreen = ({ route }: props) => {
   const navigation = useNavigation<NavigationProp>();
-
+  const pollId = route.params.id;
   const [poll, setPoll] = useState<Poll | null>(null);
   const [options, setOptions] = useState<Option[]>([]);
-  const [remainingTime, setRemainingTime] = useState<RemainingTime>({ hours: 0, minutes: 0 });
+  const [remainingTime, setRemainingTime] = useState<RemainingTime>({
+    hours: 0,
+    minutes: 0,
+  });
   const [checked, setChecked] = useState<string>("");
   const [hasVoted, setHasVoted] = useState(false);
   const [votingVisible, setVotingVisible] = useState(false);
@@ -43,10 +53,6 @@ const PollInterfaceScreen = () => {
 
   const fetchPollData = useCallback(async () => {
     try {
-      const storedId = await AsyncStorage.getItem("selectedPollId");
-      if (!storedId) return console.warn("No se encontró ID de la encuesta");
-      const pollId = parseInt(storedId, 10);
-
       const data = await pollService.getPollById(pollId);
 
       const options = await pollService.getOptionsByPoll(pollId);
@@ -63,7 +69,7 @@ const PollInterfaceScreen = () => {
       setPoll(data);
     } catch (err) {
       console.error("Error general:", err);
-    } 
+    }
   }, []);
 
   const updateRemainingTime = useCallback(() => {
@@ -76,7 +82,9 @@ const PollInterfaceScreen = () => {
     setRemainingTime({ hours, minutes });
   }, [poll]);
 
-  useEffect(() => { fetchPollData(); }, [fetchPollData]);
+  useEffect(() => {
+    fetchPollData();
+  }, [fetchPollData]);
   useEffect(() => {
     updateRemainingTime();
     const interval = setInterval(updateRemainingTime, 60 * 1000);
@@ -88,16 +96,21 @@ const PollInterfaceScreen = () => {
   // 🔹 Insertar voto en el backend
   const handleVoting = async () => {
     setVotingVisible(false);
-    if (!checked) { setError(true); return; }
+    if (!checked) {
+      setError(true);
+      return;
+    }
     setError(false);
 
     try {
-      const votedOption = options!.find((opt) => String(opt.option_order) === checked);
-      
-      const vote : Vote = {
+      const votedOption = options!.find(
+        (opt) => String(opt.option_order) === checked
+      );
+
+      const vote: Vote = {
         poll_id: poll!.id,
         option_id: votedOption!.id!,
-      }
+      };
 
       await voteService.insertVote(vote);
 
@@ -118,62 +131,114 @@ const PollInterfaceScreen = () => {
     <GradientBackground>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.form}>
-        <Text variant="headlineLarge" style={styles.title}>{poll.title}</Text>
-
-        <View style={styles.creatorContainer}>
-          <AvatarIcon size={32} profile={poll.profile}/>
-          <Text variant="bodyMedium" style={styles.creator}>
-            Creado por {poll.profile?.username || "Desconocido"}
+          <Text variant="headlineLarge" style={styles.title}>
+            {poll.title}
           </Text>
-        </View>
 
-        <Surface elevation={1} style={[styles.surface, styles.descriptionSurface]}>
-          <Text variant="labelLarge" style={styles.sectionLabel}>Descripción</Text>
-          <Text variant="bodyLarge" style={styles.descriptionText}>{poll.description}</Text>
-        </Surface>
-
-        <Surface elevation={1} style={[styles.surface, styles.textSurface]}>
-          <Text variant="bodyMedium">
-            <Icon source="calendar-start-outline" color={MD3DarkTheme.colors.primary} size={16} />{" "}
-            Iniciado: {new Date(poll.start_time).toLocaleDateString("es")}
-          </Text>
-          {remainingTime && (
-            <Text variant="bodyMedium">
-              <Icon source="timer-outline" color={MD3DarkTheme.colors.primary} size={16} />{" "}
-              {remainingTime.hours}h {remainingTime.minutes}m restantes
+          <View style={styles.creatorContainer}>
+            <AvatarIcon size={32} profile={poll.profile} />
+            <Text variant="bodyMedium" style={styles.creator}>
+              Creado por {poll.profile?.username || "Desconocido"}
             </Text>
-          )}
-        </Surface>
+          </View>
 
-        <Text variant="titleMedium" style={styles.optionsLabel}>Opciones</Text>
+          <Surface
+            elevation={1}
+            style={[styles.surface, styles.descriptionSurface]}
+          >
+            <Text variant="labelLarge" style={styles.sectionLabel}>
+              Descripción
+            </Text>
+            <Text variant="bodyLarge" style={styles.descriptionText}>
+              {poll.description}
+            </Text>
+          </Surface>
 
-        <RadioButton.Group onValueChange={setChecked} value={checked}>
-          {options.map(opt => (
-            <Surface key={opt.id} style={styles.surface}>
-              <RadioButton.Item label={opt.option_text} value={String(opt.option_order)} disabled={hasVoted} />
-            </Surface>
-          ))}
-        </RadioButton.Group>
+          <Surface elevation={1} style={[styles.surface, styles.textSurface]}>
+            <Text variant="bodyMedium">
+              <Icon
+                source="calendar-start-outline"
+                color={MD3DarkTheme.colors.primary}
+                size={16}
+              />{" "}
+              Iniciado: {new Date(poll.start_time).toLocaleDateString("es")}
+            </Text>
+            {remainingTime && (
+              <Text variant="bodyMedium">
+                <Icon
+                  source="timer-outline"
+                  color={MD3DarkTheme.colors.primary}
+                  size={16}
+                />{" "}
+                {remainingTime.hours}h {remainingTime.minutes}m restantes
+              </Text>
+            )}
+          </Surface>
 
-        <HelperText type="error" visible={error}>Debes elegir una opción para poder votar.</HelperText>
+          <Text variant="titleMedium" style={styles.optionsLabel}>
+            Opciones
+          </Text>
 
-        <Button mode="contained" disabled={hasVoted} onPress={() => setVotingVisible(true)} style={styles.button}>
-          Enviar voto
-        </Button>
+          <RadioButton.Group onValueChange={setChecked} value={checked}>
+            {options.map((opt) => (
+              <Surface key={opt.id} style={styles.surface}>
+                <RadioButton.Item
+                  label={opt.option_text}
+                  value={String(opt.option_order)}
+                  disabled={hasVoted}
+                />
+              </Surface>
+            ))}
+          </RadioButton.Group>
 
-        <Button mode="elevated" style={styles.button} onPress={() => navigation.navigate("PollResults")}>
-          Mirar resultados
-        </Button>
-      </View>
+          <HelperText type="error" visible={error}>
+            Debes elegir una opción para poder votar.
+          </HelperText>
 
-      <AppModal visible={votingVisible} dismissable={false} onDismiss={() => setVotingVisible(false)}>
-        <Text variant="headlineMedium" style={styles.title}>Confirmar voto</Text>
-        <Text style={styles.text}>No podrás revertir tu voto.</Text>
-        <View style={styles.modalButtons}>
-          <Button mode="elevated" onPress={() => setVotingVisible(false)} style={styles.inputHalf}>Cancelar</Button>
-          <Button mode="contained" onPress={handleVoting} style={styles.inputHalf}>Confirmar</Button>
+          <Button
+            mode="contained"
+            disabled={hasVoted}
+            onPress={() => setVotingVisible(true)}
+            style={styles.button}
+          >
+            Enviar voto
+          </Button>
+
+          <Button
+            mode="elevated"
+            style={styles.button}
+            onPress={() => navigation.navigate("PollResults", { id: poll.id })}
+          >
+            Mirar resultados
+          </Button>
         </View>
-      </AppModal>
+
+        <AppModal
+          visible={votingVisible}
+          dismissable={false}
+          onDismiss={() => setVotingVisible(false)}
+        >
+          <Text variant="headlineMedium" style={styles.title}>
+            Confirmar voto
+          </Text>
+          <Text style={styles.text}>No podrás revertir tu voto.</Text>
+          <View style={styles.modalButtons}>
+            <Button
+              mode="elevated"
+              onPress={() => setVotingVisible(false)}
+              style={styles.inputHalf}
+            >
+              Cancelar
+            </Button>
+            <Button
+              mode="contained"
+              onPress={handleVoting}
+              style={styles.inputHalf}
+            >
+              Confirmar
+            </Button>
+          </View>
+        </AppModal>
       </ScrollView>
     </GradientBackground>
   );
@@ -187,12 +252,26 @@ const styles = StyleSheet.create({
   title: { marginTop: 24, marginBottom: 16, fontWeight: "bold" },
   text: { marginBottom: 16 },
   button: { width: "100%", marginBottom: 16 },
-  surface: { justifyContent: "space-between", marginBottom: 16, borderRadius: 12, paddingHorizontal: 16, paddingVertical: 12 },
-  creatorContainer: { flexDirection: "row", alignItems: "center", marginBottom: 16 },
+  surface: {
+    justifyContent: "space-between",
+    marginBottom: 16,
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+  },
+  creatorContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 16,
+  },
   creator: { marginLeft: 10, flex: 1 },
   textSurface: { flexDirection: "row", alignItems: "center", gap: 8 },
   descriptionSurface: { flexDirection: "column", paddingVertical: 16 },
-  sectionLabel: { marginBottom: 8, color: MD3DarkTheme.colors.primary, fontWeight: "600" },
+  sectionLabel: {
+    marginBottom: 8,
+    color: MD3DarkTheme.colors.primary,
+    fontWeight: "600",
+  },
   descriptionText: { lineHeight: 22 },
   optionsLabel: { marginBottom: 12, marginTop: 4, fontWeight: "600" },
   inputHalf: { width: "48%" },

@@ -18,13 +18,19 @@ import { voteService } from "../../../../backend/services/voteService";
 import { pollService } from "../../../../backend/services/pollService";
 import { PollResult } from "../../models/Polls";
 import { VoteResult } from "../../models/Vote";
+import { RouteProp } from "@react-navigation/native";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
   "PollResults"
 >;
 
-const PollResultsScreen = () => {
+type props = {
+  route: RouteProp<AppStackParamList, "PollResults">;
+};
+
+const PollResultsScreen = ({route} : props) => {
+  const pollId = route.params.id;
   const [poll, setPoll] = useState<PollResult | null>(null);
   const [votes, setVotes] = useState<VoteResult[]>([]);
   const [chart, setChart] = useState("bar");
@@ -49,11 +55,6 @@ const PollResultsScreen = () => {
     let unsubscribe: null | (() => void) = null;
 
     const load = async () => {
-      const storedPollId = await AsyncStorage.getItem("selectedPollId");
-      if (!storedPollId) return;
-
-      const pollId = parseInt(storedPollId);
-
       // fetch poll if missing
       if (!poll) {
         const data = await pollService.getPollResult(pollId);
@@ -73,11 +74,6 @@ const PollResultsScreen = () => {
 
     // subscribe to realtime
     (async () => {
-      const storedPollId = await AsyncStorage.getItem("selectedPollId");
-      if (!storedPollId) return;
-
-      const pollId = parseInt(storedPollId);
-
       unsubscribe = voteService.onVotesChange(pollId, () => {
         load(); // refresh when a vote changes
       });

@@ -14,15 +14,8 @@ type props = {
 };
 
 const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
-  const handlePress = async () => {
-    try {
-      // Guardar el ID de la encuesta seleccionada
-      await AsyncStorage.setItem("selectedPollId", String(poll.id));
-      // Navegar a PollInterface
-      navigation.navigate("PollInterface");
-    } catch (err) {
-      console.error("Error guardando ID de encuesta:", err);
-    }
+  const handlePress = () => {
+    navigation.navigate("PollInterface", {id : poll.id});
   };
 
   return (

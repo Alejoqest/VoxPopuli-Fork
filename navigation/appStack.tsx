@@ -12,8 +12,8 @@ export type AppStackParamList = {
   Home: undefined;
   CreatePoll: undefined;
   BrowsePoll: undefined;
-  PollInterface: undefined;
-  PollResults: undefined;
+  PollInterface: {id : number};
+  PollResults: {id : number};
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
