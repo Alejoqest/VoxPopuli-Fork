@@ -11,30 +11,22 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
-import { supabase } from "../../../../backend/server/supabase";
 import { Colors } from "../../../constants/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { voteService } from "../../../../backend/services/voteService";
 import { pollService } from "../../../../backend/services/pollService";
 import { PollResult } from "../../models/Polls";
+import { VoteResult } from "../../models/Vote";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
   "PollResults"
 >;
 
-export type Vote = {
-  id: number;
-  optionName: string;
-  optionOrder: number;
-  numVotes: number;
-  percentageVotes: number;
-};
-
 const PollResultsScreen = () => {
   const [poll, setPoll] = useState<PollResult | null>(null);
-  const [votes, setVotes] = useState<Vote[]>([]);
+  const [votes, setVotes] = useState<VoteResult[]>([]);
   const [chart, setChart] = useState("bar");
   const opacity = useRef(new Animated.Value(1)).current;
 
