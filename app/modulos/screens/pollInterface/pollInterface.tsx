@@ -2,7 +2,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState, useCallback } from "react";
 import { ScrollView, StyleSheet, View } from "react-native";
 import {
-  Avatar,
   Button,
   HelperText,
   Icon,
