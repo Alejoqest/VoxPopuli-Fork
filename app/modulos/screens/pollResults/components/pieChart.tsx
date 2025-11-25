@@ -72,7 +72,7 @@ const pieChart = ({ votes, poll }: props) => {
                 }}
               />
               <Text variant="titleSmall">
-                {v.optionName} ({v.percentageVotes}%)
+                {v.optionText} ({v.percentageVotes}%)
               </Text>
             </View>
           );

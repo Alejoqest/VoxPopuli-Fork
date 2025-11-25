@@ -133,7 +133,7 @@ const PollResultsScreen = ({route} : props) => {
                     containerColor={Colors[i]}
                   />
                   <Text variant="titleMedium">
-                    {v.optionName + "\n"}
+                    {v.optionText + "\n"}
                     {v.numVotes} Votos
                   </Text>
                 </View>

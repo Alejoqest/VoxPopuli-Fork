@@ -8,7 +8,7 @@ export type Vote = {
 
 export type VoteResult = {
     id: number;
-    optionName: string;
+    optionText: string;
     optionOrder: number;
     numVotes: number;
     percentageVotes: number;
