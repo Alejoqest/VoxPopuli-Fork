@@ -17,7 +17,7 @@ type NavigationProp = NativeStackNavigationProp<
 
 const BrowsePollsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
   const [username, setUsername] = useState<string | null>(null);
   const scrollRef = useRef<ScrollView>(null);

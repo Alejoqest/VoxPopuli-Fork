@@ -20,7 +20,7 @@ const HomeScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
-  const [polls, setPolls] = useState<Poll[]>([]);
+  const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
