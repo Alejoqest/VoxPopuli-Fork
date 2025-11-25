@@ -12,6 +12,8 @@ export const Colors = [
 ];
 
 export const ExtraColors = {
-  empty: "#555555ff"
+  empty: "#555555ff",
+  open: "rgb(79, 55, 139)",
+  closed: "rgb(208, 188, 255)",
 }
 

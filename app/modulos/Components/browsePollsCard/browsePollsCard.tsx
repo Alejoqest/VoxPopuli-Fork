@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
 import AvatarIcon from "../avatarIcon/avatarIcon";
+import PollCardState from "../pollCardState/pollCardState";
 
 type props = {
   poll: Poll;
@@ -15,7 +16,7 @@ type props = {
 
 const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
   const handlePress = () => {
-    navigation.navigate("PollInterface", {id : poll.id});
+    navigation.navigate("PollInterface", { id: poll.id });
   };
 
   return (
@@ -27,32 +28,8 @@ const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
         subtitle={"Creado por: " + poll.profile.username}
         subtitleVariant="titleSmall"
         style={styles.title}
-        left={() => <AvatarIcon size={35} profile={poll.profile}/>}
-        right={() => (
-          <View
-            style={{
-              paddingRight: 12,
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "flex-end",
-              marginVertical: 4,
-              flexShrink: 1,
-            }}
-          >
-            <View
-              style={{
-                width: 10,
-                height: 10,
-                borderRadius: 5,
-                backgroundColor: statusColor,
-                marginRight: 8,
-              }}
-            />
-            <Text variant="titleSmall" style={{ color: statusColor }}>
-              {poll.status == "active" ? "Activo" : "Cerrado"}
-            </Text>
-          </View>
-        )}
+        left={() => <AvatarIcon size={35} profile={poll.profile} />}
+        right={() => <PollCardState status={poll.status} color={statusColor} />}
       />
       <Divider style={styles.text} />
       <Card.Content style={styles.cardContent}>
@@ -81,7 +58,7 @@ const styles = StyleSheet.create({
   title: {
     marginTop: 8,
     marginBottom: 8,
-    marginLeft: 8
+    marginLeft: 8,
   },
   text: {
     marginBottom: 16,
