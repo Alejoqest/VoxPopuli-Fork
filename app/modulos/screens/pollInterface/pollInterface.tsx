@@ -48,7 +48,7 @@ const PollInterfaceScreen = ({ route }: props) => {
     minutes: 0,
   });
   const [checked, setChecked] = useState<string>("");
-  const [hasVoted, setHasVoted] = useState(false);
+  const [voteDisabled, setVoteDisabled] = useState(false);
   const [votingVisible, setVotingVisible] = useState(false);
   const [error, setError] = useState(false);
 
@@ -60,9 +60,12 @@ const PollInterfaceScreen = ({ route }: props) => {
 
       const vote = await voteService.getVote(pollId);
 
+      if (data.status == "closed" || data.status == "waiting") {
+        setVoteDisabled(true);
+      }
       if (vote) {
         const votedOption = options?.find((opt) => opt.id === vote.option_id);
-        setHasVoted(true);
+        setVoteDisabled(true);
         setChecked(String(votedOption!.option_order));
       }
 
@@ -115,14 +118,14 @@ const PollInterfaceScreen = ({ route }: props) => {
 
       await voteService.insertVote(vote);
 
-      setHasVoted(true);
+      setVoteDisabled(true);
 
       console.log("Voto registrado correctamente");
     } catch (err) {
       console.error("Error guardando voto:", err);
       // Si falla, revertir el caché y el estado
       await AsyncStorage.removeItem(`vote_poll_${poll!.id}`);
-      setHasVoted(false);
+      setVoteDisabled(false);
     }
   };
 
@@ -186,7 +189,7 @@ const PollInterfaceScreen = ({ route }: props) => {
                 <RadioButton.Item
                   label={opt.option_text}
                   value={String(opt.option_order)}
-                  disabled={hasVoted}
+                  disabled={voteDisabled}
                 />
               </Surface>
             ))}
@@ -198,7 +201,7 @@ const PollInterfaceScreen = ({ route }: props) => {
 
           <Button
             mode="contained"
-            disabled={hasVoted}
+            disabled={voteDisabled}
             onPress={() => setVotingVisible(true)}
             style={styles.button}
           >
