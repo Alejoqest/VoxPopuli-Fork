@@ -1,20 +1,18 @@
 import React from "react";
-import { View, StyleSheet } from "react-native";
+import { StyleSheet } from "react-native";
 import { Card, Divider, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
 import AvatarIcon from "../avatarIcon/avatarIcon";
-import PollCardState from "../pollCardState/pollCardState";
+import PollCardState from "../pollState/pollState";
 
 type props = {
   poll: Poll;
-  statusColor: string;
   navigation: NavigationProp<AppStackParamList>;
 };
 
-const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
+const browsePollsCard = ({ poll, navigation }: props) => {
   const handlePress = () => {
     navigation.navigate("PollInterface", { id: poll.id });
   };
@@ -29,7 +27,7 @@ const browsePollsCard = ({ poll, statusColor, navigation }: props) => {
         subtitleVariant="titleSmall"
         style={styles.title}
         left={() => <AvatarIcon size={35} profile={poll.profile} />}
-        right={() => <PollCardState status={poll.status} color={statusColor} />}
+        right={() => <PollCardState status={poll.status}/>}
       />
       <Divider style={styles.text} />
       <Card.Content style={styles.cardContent}>

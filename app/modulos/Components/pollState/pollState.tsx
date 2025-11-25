@@ -1,13 +1,19 @@
 import React from "react";
 import { View } from "react-native";
 import { Text } from "react-native-paper";
+import { ExtraColors } from "../../../constants/colors";
 
 type Props = {
   status: "waiting" | "active" | "closed";
-  color: string;
 };
 
-const pollCardState = ({ status, color }: Props) => {
+const pollState = ({ status }: Props) => {
+
+    const color = status == "active"
+                  ? ExtraColors.open
+                  : status == "waiting"
+                  ? ExtraColors.empty
+                  : ExtraColors.closed;
   return (
     <View
       style={{
@@ -35,4 +41,4 @@ const pollCardState = ({ status, color }: Props) => {
   );
 };
 
-export default pollCardState;
+export default pollState;

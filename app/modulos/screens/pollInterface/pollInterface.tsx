@@ -22,6 +22,7 @@ import { voteService } from "../../../../backend/services/voteService";
 import { Vote } from "../../models/Vote";
 import AvatarIcon from "../../components/avatarIcon/avatarIcon";
 import Loading from "../../components/loading/loading";
+import PollCardState from "../../components/pollState/pollState";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -128,15 +129,18 @@ const PollInterfaceScreen = ({ route }: props) => {
     }
   };
 
-  if (!poll) return <Loading/>;
+  if (!poll) return <Loading />;
 
   return (
     <GradientBackground>
       <ScrollView contentContainerStyle={styles.container}>
         <View style={styles.form}>
-          <Text variant="headlineLarge" style={styles.title}>
-            {poll.title}
-          </Text>
+          <View style={styles.titleContainer}>
+            <Text variant="headlineLarge" style={styles.title}>
+              {poll.title}
+            </Text>
+            <PollCardState status={poll.status}/>
+          </View>
 
           <View style={styles.creatorContainer}>
             <AvatarIcon size={32} profile={poll.profile} />
@@ -255,6 +259,12 @@ const styles = StyleSheet.create({
   title: { marginTop: 24, marginBottom: 16, fontWeight: "bold" },
   text: { marginBottom: 16 },
   button: { width: "100%", marginBottom: 16 },
+  titleContainer: {
+    justifyContent: "space-between",
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8
+  },
   surface: {
     justifyContent: "space-between",
     marginBottom: 16,

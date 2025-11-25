@@ -5,7 +5,6 @@ import { NavigationProp } from "@react-navigation/native";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import BrowsePollsCard from "../browsePollsCard/browsePollsCard";
 import { Poll } from "../../models/Polls";
-import { ExtraColors } from "../../../constants/colors";
 
 type props = {
   polls: Poll[];
@@ -18,17 +17,10 @@ const browsePollsView = ({ polls, navigation }: props) => {
       <Divider style={styles.text} />
       {polls.length !== 0 ? (
         polls.map((v) => {
-          const statusColor =
-            v.status == "active"
-              ? ExtraColors.open
-              : v.status == "waiting"
-              ? ExtraColors.empty
-              : ExtraColors.closed;
           return (
             <BrowsePollsCard
               key={v.id}
               poll={v}
-              statusColor={statusColor}
               navigation={navigation}
             />
           );
