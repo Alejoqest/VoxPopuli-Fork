@@ -109,6 +109,7 @@ const CreatePollScreen = () => {
 
       alert(`✅ Encuesta "${title}" creada correctamente`);
       resetForm();
+      navigation.navigate('PollInterface', {id : data.id})
     } catch (err: any) {
       console.error("Error al crear encuesta:", err.message);
       alert("❌ Error al crear la encuesta");
@@ -297,7 +298,6 @@ const CreatePollScreen = () => {
               mode="contained"
               onPress={() => {
                 handleSubmit(); // Primero ejecuta tu función
-                navigation.navigate("Home"); // Luego navega
               }}
               style={styles.inputHalf}
             >

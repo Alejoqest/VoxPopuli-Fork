@@ -90,5 +90,7 @@ export const pollService = {
             .insert(optionsToInsert);
 
         if (optionError) throw new Error("error de option = " + optionError.message);
+
+        return data.id;
     }
 }
