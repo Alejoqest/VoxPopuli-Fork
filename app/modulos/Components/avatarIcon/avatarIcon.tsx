@@ -5,7 +5,7 @@ import { ExtraColors } from "../../../constants/colors";
 
 type props = {
   size: number;
-  profile?: ProfileAvatar;
+  profile?: ProfileAvatar | null;
 };
 
 const AvatarIcon = ({ size, profile }: props) => {

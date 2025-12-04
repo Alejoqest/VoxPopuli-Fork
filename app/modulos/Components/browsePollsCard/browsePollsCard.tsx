@@ -23,7 +23,7 @@ const browsePollsCard = ({ poll, navigation }: props) => {
         title={poll.title}
         titleNumberOfLines={3}
         titleVariant="titleLarge"
-        subtitle={"Creado por: " + poll.profile.username}
+        subtitle={`Creado por ${poll.profile? poll.profile.username : 'Desconocido'}`/*"Creado por: " + poll.profile.username*/}
         subtitleVariant="titleSmall"
         style={styles.title}
         left={() => <AvatarIcon size={35} profile={poll.profile} />}

@@ -16,14 +16,12 @@ export const pollService = {
     },
 
     getPolls: async (text: string) => {
+        console.log(text);
         const { data, error } = await supabase
             .from("poll")
             .select("*, profile(id, username, color)")
-            .or(
-                `title.ilike.%${text}%`
-            )
-            .or(`username.ilike.%${text}%`, { foreignTable: "profile" });
-        //.or(`title.ilike.%${text}%,profile.username.ilike.%${text}%`)
+            .ilike(`title`, `%${text}%`)
+            //.or(`username.ilike.%alejoqest%`, { foreignTable: "profile" })
 
         if (error) throw new Error(error.message);
 
@@ -42,7 +40,7 @@ export const pollService = {
         return data;
     },
 
-    getPollResult: async (id :number) : Promise<PollResult> => {
+    getPollResult: async (id: number): Promise<PollResult> => {
         const { data, error } = await supabase
             .from('poll')
             .select("*")

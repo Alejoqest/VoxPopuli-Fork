@@ -9,7 +9,7 @@ export type Poll = {
         id: string;
         username: string;
         color: string;
-    }
+    } | null;
 };
 
 export type PollResult = {

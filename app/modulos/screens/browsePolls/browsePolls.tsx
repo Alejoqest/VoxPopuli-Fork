@@ -44,7 +44,8 @@ const BrowsePollsScreen = () => {
     const text = search.toLowerCase();
 
     try {
-      const data = await pollService.getPolls(text);
+      const data = await pollService.getPolls(search);
+      console.log(data);
       setPolls(data);
     } catch (err) {
       console.log(err);
