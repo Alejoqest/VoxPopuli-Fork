@@ -13,11 +13,9 @@ import DateTimePicker from "../../components/datetimepicker/datetimepicker";
 import OptionsForm from "./components/optionsForm";
 import NotificationSwitch from "./components/notificationSwitch";
 import AppModal from "../../components/modal/modal";
-import { supabase } from "../../../../backend/server/supabase";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { pollService } from "../../../../backend/services/pollService";
-import { authService } from "../../../../backend/services/authService";
 import { OptionCreated } from "../../models/Options";
 
 type NavigationProp = NativeStackNavigationProp<
@@ -96,8 +94,8 @@ const CreatePollScreen = () => {
     }
 
     try {
-
-      const status = startTime!.getTime > new Date().getTime? 'waiting' : 'active';
+      const status =
+        startTime!.getTime > new Date().getTime ? "waiting" : "active";
 
       const data = await pollService.insertPoll(
         {
@@ -110,9 +108,8 @@ const CreatePollScreen = () => {
         options
       );
 
-      alert(`✅ Encuesta "${title}" creada correctamente`);
       resetForm();
-      navigation.navigate('PollInterface', {id : data.id})
+      navigation.navigate("PollInterface", { id: data });
     } catch (err: any) {
       console.error("Error al crear encuesta:", err.message);
       alert("❌ Error al crear la encuesta");
