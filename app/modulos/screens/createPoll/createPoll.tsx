@@ -96,13 +96,16 @@ const CreatePollScreen = () => {
     }
 
     try {
+
+      const status = startTime!.getTime > new Date().getTime? 'waiting' : 'active';
+
       const data = await pollService.insertPoll(
         {
           title,
           description,
           start_time: startTime!.toISOString(),
           end_time: endTime!.toISOString(),
-          status: "active",
+          status: status,
         },
         options
       );
