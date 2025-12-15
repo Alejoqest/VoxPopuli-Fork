@@ -168,7 +168,7 @@ const PollInterfaceScreen = ({ route }: props) => {
                 color={MD3DarkTheme.colors.primary}
                 size={16}
               />{" "}
-              Iniciado: {new Date(poll.start_time).toLocaleDateString("es")}
+              {poll.status == "waiting" ? 'Inicia en:' : 'Iniciado:'} {new Date(poll.start_time).toLocaleDateString("es")}
             </Text>
             {remainingTime && (
               <Text variant="bodyMedium">
@@ -214,6 +214,7 @@ const PollInterfaceScreen = ({ route }: props) => {
           <Button
             mode="elevated"
             style={styles.button}
+            disabled={poll.status == "waiting"}
             onPress={() => navigation.navigate("PollResults", { id: poll.id })}
           >
             Mirar resultados
