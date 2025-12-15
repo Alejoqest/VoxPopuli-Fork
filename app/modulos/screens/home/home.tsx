@@ -26,30 +26,46 @@ const HomeScreen = () => {
   useEffect(() => {
     const load = async () => {
       setLoading(true);
-      const session = await authService.getSession().then((s) => s?.user);
-      setUser(session ?? null);
-      if (session) {
-        const data = await profileService.getUser(session.id);
+
+      const sessionUser = await authService
+        .getSession()
+        .then((s) => s?.user ?? null);
+
+      setUser(sessionUser);
+
+      if (sessionUser) {
+        const data = await profileService.getUser(sessionUser.id);
         setProfile(data);
-        setLoading(false);
-        const poll = await pollService.getPollsByUserId(session.id);
+
+        const poll = await pollService.getPollsByUserId(sessionUser.id);
         setPolls(poll);
       }
+
+      setLoading(false);
     };
+
     load();
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     if (!user) return;
-    const loadProfile = async () => {
-      const data = await profileService.getUser(user.id);
-      setProfile(data);
-      setLoading(false);
-      const poll = await pollService.getPollsByUserId(user.id);
-      setPolls(poll);
+
+    let unsubscribe: (() => void) | null = null;
+
+    const subscribe = async () => {
+      unsubscribe = await pollService.onPollChange(user.id, async () => {
+        const poll = await pollService.getPollsByUserId(user.id);
+        console.log(poll);
+        setPolls(poll);
+      });
     };
-    loadProfile();
-  }, [user]);*/
+
+    subscribe();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
+  }, [user]);
 
   const handleLogout = async () => {
     await authService.logoutUser();

@@ -47,7 +47,8 @@ export const voteService = {
             )
             .subscribe();
 
-        // 🔥 return proper unsubscribe
+            console.log("Sub init")
+
         return () => {
             supabase.removeChannel(channel);
         };
