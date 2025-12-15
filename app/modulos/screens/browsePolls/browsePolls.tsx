@@ -23,7 +23,7 @@ const BrowsePollsScreen = () => {
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    const getUsername = async () => {
+    /*const getUsername = async () => {
       const savedUsername = await AsyncStorage.getItem("username");
       if (savedUsername) {
         setUsername(savedUsername);
@@ -32,8 +32,22 @@ const BrowsePollsScreen = () => {
         console.warn("No se encontró el username en memoria");
       }
     };
-    getUsername();
+    getUsername();*/
+    let unsubscribe: (() => void) | null = null;
+
+    const subscribe = async () => {
+      unsubscribe = await pollService.onPollUpdate(async () => {
+        changeSearch();
+      });
+    };
+
+    subscribe();
+
     changeSearch();
+
+    return () => {
+      if (unsubscribe) unsubscribe();
+    };
   }, []);
 
   const scrollToTop = () => {
@@ -44,8 +58,7 @@ const BrowsePollsScreen = () => {
     const text = search.toLowerCase();
 
     try {
-      const data = await pollService.getPolls(search);
-      console.log(data);
+      const data = await pollService.getPolls(text);
       setPolls(data);
     } catch (err) {
       console.log(err);

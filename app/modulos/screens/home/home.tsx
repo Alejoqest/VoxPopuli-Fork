@@ -55,7 +55,6 @@ const HomeScreen = () => {
     const subscribe = async () => {
       unsubscribe = await pollService.onPollChange(user.id, async () => {
         const poll = await pollService.getPollsByUserId(user.id);
-        console.log(poll);
         setPolls(poll);
       });
     };

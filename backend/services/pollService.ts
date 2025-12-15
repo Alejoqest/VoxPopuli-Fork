@@ -4,114 +4,136 @@ import { supabase } from "../server/supabase";
 import { authService } from "./authService";
 
 export const pollService = {
-  getPollsByUserId: async (id: string): Promise<Poll[]> => {
-    const { data, error } = await supabase
-      .from("poll")
-      .select("*, profile(id, username, color)")
-      .eq("creator_id", id);
+    getPollsByUserId: async (id: string): Promise<Poll[]> => {
+        const { data, error } = await supabase
+            .from("poll")
+            .select("*, profile(id, username, color)")
+            .eq("creator_id", id)
+            .order("created_at", { ascending: false })
 
-    if (error) throw new Error(error.message);
+        if (error) throw new Error(error.message);
 
-    return data || [];
-  },
+        return data || [];
+    },
 
-  getPolls: async (text: string) => {
-    console.log(text);
-    const { data, error } = await supabase
-      .from("poll")
-      .select("*, profile(id, username, color)")
-      .ilike(`title`, `%${text}%`);
-    //.or(`username.ilike.%alejoqest%`, { foreignTable: "profile" })
+    getPolls: async (text: string) => {
+        console.log(text);
+        const { data, error } = await supabase
+            .from("poll")
+            .select("*, profile(id, username, color)")
+            .ilike(`title`, `%${text}%`);
+        //.or(`username.ilike.%alejoqest%`, { foreignTable: "profile" })
 
-    if (error) throw new Error(error.message);
+        if (error) throw new Error(error.message);
 
-    return data || [];
-  },
+        return data || [];
+    },
 
-  getPollById: async (id: number): Promise<Poll> => {
-    const { data, error } = await supabase
-      .from("poll")
-      .select("*, profile(id, username, color)")
-      .eq("id", id)
-      .single();
+    getPollById: async (id: number): Promise<Poll> => {
+        const { data, error } = await supabase
+            .from("poll")
+            .select("*, profile(id, username, color)")
+            .eq("id", id)
+            .single();
 
-    if (error) throw new Error(error.message);
+        if (error) throw new Error(error.message);
 
-    return data;
-  },
+        return data;
+    },
 
-  getPollResult: async (id: number): Promise<PollResult> => {
-    const { data, error } = await supabase
-      .from("poll")
-      .select("*")
-      .eq("id", id)
-      .single();
+    getPollResult: async (id: number): Promise<PollResult> => {
+        const { data, error } = await supabase
+            .from("poll")
+            .select("*")
+            .eq("id", id)
+            .single();
 
-    if (error) throw new Error(error.message);
+        if (error) throw new Error(error.message);
 
-    return data;
-  },
+        return data;
+    },
 
-  getOptionsByPoll: async (id: number): Promise<Option[]> => {
-    const { data, error } = await supabase
-      .from("option")
-      .select("*")
-      .eq("poll_id", id)
-      .order("option_order", { ascending: true });
+    getOptionsByPoll: async (id: number): Promise<Option[]> => {
+        const { data, error } = await supabase
+            .from("option")
+            .select("*")
+            .eq("poll_id", id)
+            .order("option_order", { ascending: true });
 
-    if (error) throw new Error(error.message);
+        if (error) throw new Error(error.message);
 
-    return data || [];
-  },
+        return data || [];
+    },
 
-  insertPoll: async (poll: PollInsert, options: OptionCreated[]) => {
-    const auth = await authService.getSession().then((e) => e?.user);
+    insertPoll: async (poll: PollInsert, options: OptionCreated[]) => {
+        const auth = await authService.getSession().then((e) => e?.user);
 
-    poll.creator_id = auth!.id;
+        poll.creator_id = auth!.id;
 
-    const { data, error } = await supabase
-      .from("poll")
-      .insert(poll)
-      .select("id")
-      .single();
+        const { data, error } = await supabase
+            .from("poll")
+            .insert(poll)
+            .select("id")
+            .single();
 
-    if (error) throw new Error("error de poll = " + error.message);
+        if (error) throw new Error("error de poll = " + error.message);
 
-    const optionsToInsert: Option[] = options.map((opt, index) => ({
-      option_text: opt.optionText.trim(),
-      option_order: index + 1,
-      poll_id: data.id,
-    }));
+        const optionsToInsert: Option[] = options.map((opt, index) => ({
+            option_text: opt.optionText.trim(),
+            option_order: index + 1,
+            poll_id: data.id,
+        }));
 
-    const { error: optionError } = await supabase
-      .from("option")
-      .insert(optionsToInsert);
+        const { error: optionError } = await supabase
+            .from("option")
+            .insert(optionsToInsert);
 
-    if (optionError)
-      throw new Error("error de option = " + optionError.message);
+        if (optionError)
+            throw new Error("error de option = " + optionError.message);
 
-    return data.id;
-  },
+        return data.id;
+    },
 
-  onPollChange: async (user_id: string, callback: () => void) => {
-    const channel = supabase
-      .channel(`user:${user_id}:polls`)
-      .on(
-        "postgres_changes",
-        {
-          schema: "public",
-          table: "poll",
-          event: "*",
-          filter: `creator_id=eq.${user_id}`,
-        },
-        (payload) => {
-          callback();
-        }
-      )
-      .subscribe();
+    onPollChange: async (user_id: string, callback: () => void) => {
+        const channel = supabase
+            .channel(`user:${user_id}:polls`)
+            .on(
+                "postgres_changes",
+                {
+                    schema: "public",
+                    table: "poll",
+                    event: "*",
+                    filter: `creator_id=eq.${user_id}`,
+                },
+                (payload) => {
+                    callback();
+                }
+            )
+            .subscribe();
 
-    return () => {
-      supabase.removeChannel(channel);
-    };
-  },
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    },
+
+    onPollUpdate: async (callback: () => void) => {
+        const channel = supabase
+            .channel(`search:polls`)
+            .on(
+                "postgres_changes",
+                {
+                    schema: "public",
+                    table: "poll",
+                    event: "*",
+                },
+                (payload) => {
+                    callback();
+                }
+            )
+            .subscribe();
+
+        return () => {
+            supabase.removeChannel(channel);
+        };
+    }
 };
