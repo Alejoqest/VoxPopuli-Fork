@@ -120,11 +120,10 @@ const PollInterfaceScreen = ({ route }: props) => {
 
       setVoteDisabled(true);
 
-      console.log("Voto registrado correctamente");
+      //console.log("Voto registrado correctamente");
     } catch (err) {
       console.error("Error guardando voto:", err);
       // Si falla, revertir el caché y el estado
-      await AsyncStorage.removeItem(`vote_poll_${poll!.id}`);
       setVoteDisabled(false);
     }
   };
