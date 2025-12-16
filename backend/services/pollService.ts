@@ -3,6 +3,12 @@ import { Poll, PollInsert, PollResult } from "../../app/modulos/models/Polls";
 import { supabase } from "../server/supabase";
 import { authService } from "./authService";
 
+export type searchQuery = {
+    text: string;
+    state: string;
+    order?: boolean; 
+}
+
 export const pollService = {
     getPollsByUserId: async (id: string): Promise<Poll[]> => {
         const { data, error } = await supabase
@@ -16,13 +22,18 @@ export const pollService = {
         return data || [];
     },
 
-    getPolls: async (text: string) => {
-        console.log(text);
-        const { data, error } = await supabase
+    getPolls: async ({text, state , order } : searchQuery) => {
+        let query = supabase
             .from("poll")
             .select("*, profile(id, username, color)")
-            .ilike(`title`, `%${text}%`);
-        //.or(`username.ilike.%alejoqest%`, { foreignTable: "profile" })
+            .ilike(`title`, `%${text}%`)
+            .order('created_at', { ascending: order});
+
+        if (state !== "all") {
+            query.eq('status', state);
+        }
+
+        const { data, error } = await query;
 
         if (error) throw new Error(error.message);
 

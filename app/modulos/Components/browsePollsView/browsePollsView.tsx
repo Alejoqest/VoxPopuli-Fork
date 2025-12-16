@@ -20,28 +20,30 @@ type props = {
 
 const browsePollsView = ({ type, polls, navigation }: props) => {
   return (
-    <View>
+    <>
       <Divider style={styles.text} />
-      {!polls ? (
-        <ActivityIndicator
-          animating
-          color={MD3DarkTheme.colors.primary}
-          size={"large"}
-        />
-      ) : polls.length !== 0 ? (
-        polls.map((v) => {
-          return type == "browse" ? (
-            <BrowsePollsCard key={v.id} poll={v} navigation={navigation} />
-          ) : (
-            <UserPollsCard key={v.id} poll={v} navigation={navigation} />
-          );
-        })
-      ) : (
-        <View style={{ justifyContent: "center", alignItems: "center" }}>
-          <Text variant="titleLarge">No hay encuestas encontradas</Text>
-        </View>
-      )}
-    </View>
+      <View style={{ width: "100%" }}>
+        {!polls ? (
+          <ActivityIndicator
+            animating
+            color={MD3DarkTheme.colors.primary}
+            size={"large"}
+          />
+        ) : polls.length !== 0 ? (
+          polls.map((v) => {
+            return type == "browse" ? (
+              <BrowsePollsCard key={v.id} poll={v} navigation={navigation} />
+            ) : (
+              <UserPollsCard key={v.id} poll={v} navigation={navigation} />
+            );
+          })
+        ) : (
+          <View style={{ justifyContent: "center", alignItems: "center" }}>
+            <Text variant="titleLarge">No hay encuestas encontradas</Text>
+          </View>
+        )}
+      </View>
+    </>
   );
 };
 

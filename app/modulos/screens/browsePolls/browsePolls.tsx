@@ -8,7 +8,15 @@ import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
-import { pollService } from "../../../../backend/services/pollService";
+import {
+  pollService,
+  searchQuery,
+} from "../../../../backend/services/pollService";
+import OptionSearch from "../../components/optionSearch/optionSearch";
+import {
+  orderContent,
+  stateContent,
+} from "../../../constants/optionsSearchContent";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -19,7 +27,9 @@ const BrowsePollsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
-  const [username, setUsername] = useState<string | null>(null);
+  //const [username, setUsername] = useState<string | null>(null);
+  const [searchStatus, setSearchStatus] = useState<string>("all");
+  const [searchOrder, setSearchOrder] = useState<string>("");
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -50,15 +60,29 @@ const BrowsePollsScreen = () => {
     };
   }, []);
 
+  useEffect(() => {
+    changeSearch();
+  }, [searchStatus, searchOrder]);
+
   const scrollToTop = () => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
   const changeSearch = async () => {
+    setPolls(undefined);
+
     const text = search.toLowerCase();
 
+    const order = searchOrder ? true : false;
+
+    const query: searchQuery = {
+      text: text,
+      state: searchStatus,
+      order: order,
+    };
+
     try {
-      const data = await pollService.getPolls(text);
+      const data = await pollService.getPolls(query);
       setPolls(data);
     } catch (err) {
       console.log(err);
@@ -68,21 +92,9 @@ const BrowsePollsScreen = () => {
   return (
     <GradientBackground>
       <View style={styles.form}>
-        <ScrollView
-          contentContainerStyle={styles.container}
-          style={{ flex: 1 }}
-          ref={scrollRef}
-        >
           <Text variant="displayMedium" style={styles.title}>
             Explorar Encuestas
           </Text>
-
-          {username && (
-            <Text variant="bodyLarge" style={{ marginBottom: 8 }}>
-              👋 Bienvenido,{" "}
-              <Text style={{ fontWeight: "bold" }}>{username}</Text>
-            </Text>
-          )}
 
           <Searchbar
             placeholder="Busca encuesta por tema..."
@@ -92,7 +104,29 @@ const BrowsePollsScreen = () => {
             style={styles.text}
           />
 
-          <BrowsePollsView type="browse" polls={polls} navigation={navigation} />
+          <ScrollView horizontal style={{ paddingVertical: 8, maxHeight: 50 }}>
+            <OptionSearch
+              chips={stateContent}
+              value={searchStatus}
+              setValue={setSearchStatus}
+            />
+            <OptionSearch
+              chips={orderContent}
+              value={searchOrder}
+              setValue={setSearchOrder}
+            />
+          </ScrollView>
+
+          <ScrollView
+            contentContainerStyle={styles.container}
+            style={{ flex: 1 }}
+            ref={scrollRef}
+          >
+          <BrowsePollsView
+            type="browse"
+            polls={polls}
+            navigation={navigation}
+          />
         </ScrollView>
 
         <FAB
