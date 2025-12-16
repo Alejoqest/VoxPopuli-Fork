@@ -139,7 +139,7 @@ const PollInterfaceScreen = ({ route }: props) => {
             <Text variant="headlineLarge" style={styles.title}>
               {poll.title}
             </Text>
-            <PollCardState status={poll.status}/>
+            <PollCardState status={poll.status} />
           </View>
 
           <View style={styles.creatorContainer}>
@@ -168,7 +168,8 @@ const PollInterfaceScreen = ({ route }: props) => {
                 color={MD3DarkTheme.colors.primary}
                 size={16}
               />{" "}
-              {poll.status == "waiting" ? 'Inicia en:' : 'Iniciado:'} {new Date(poll.start_time).toLocaleDateString("es")}
+              {poll.status == "waiting" ? "Inicia en:" : "Iniciado:"}{" "}
+              {new Date(poll.start_time).toLocaleDateString("es")}
             </Text>
             {remainingTime && (
               <Text variant="bodyMedium">
@@ -177,7 +178,11 @@ const PollInterfaceScreen = ({ route }: props) => {
                   color={MD3DarkTheme.colors.primary}
                   size={16}
                 />{" "}
-                {poll.status != "closed"? `${remainingTime.hours}h ${remainingTime.minutes} restantes` : `Terminado en ${new Date(poll.end_time).toLocaleDateString("es")}`}
+                {poll.status != "closed"
+                  ? `${remainingTime.hours}h ${remainingTime.minutes} restantes`
+                  : `Terminado en ${new Date(poll.end_time).toLocaleDateString(
+                      "es"
+                    )}`}
               </Text>
             )}
           </Surface>
@@ -262,9 +267,9 @@ const styles = StyleSheet.create({
   button: { width: "100%", marginBottom: 16 },
   titleContainer: {
     justifyContent: "space-between",
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 8
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   surface: {
     justifyContent: "space-between",
