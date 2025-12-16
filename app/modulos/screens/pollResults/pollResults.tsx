@@ -20,6 +20,7 @@ import { PollResult } from "../../models/Polls";
 import { VoteResult } from "../../models/Vote";
 import { RouteProp } from "@react-navigation/native";
 import Loading from "../../components/loading/loading";
+import OptionCountView from "./components/optionCountView";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -56,13 +57,11 @@ const PollResultsScreen = ({route} : props) => {
     let unsubscribe: null | (() => void) = null;
 
     const load = async () => {
-      // fetch poll if missing
       if (!poll) {
         const data = await pollService.getPollResult(pollId);
         setPoll(data);
       }
 
-      // fetch vote results
       const results = await voteService.getResults(pollId);
       const totalVotes = results.reduce((n, r) => n + r.numVotes, 0);
 
@@ -76,7 +75,7 @@ const PollResultsScreen = ({route} : props) => {
     // subscribe to realtime
     (async () => {
       unsubscribe = voteService.onVotesChange(pollId, () => {
-        load(); // refresh when a vote changes
+        load();
       });
     })();
 
@@ -113,34 +112,7 @@ const PollResultsScreen = ({route} : props) => {
 
           <Divider style={styles.text} />
 
-          <View style={styles.text}>
-            {votes.map((v, i) => (
-              <Surface
-                key={v.id}
-                style={[
-                  styles.surface,
-                  styles.textSuface,
-                  {
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  },
-                ]}
-              >
-                <View style={{ flexDirection: "row", alignItems: "center" }}>
-                  <IconButton
-                    icon="circle-outline"
-                    containerColor={Colors[i]}
-                  />
-                  <Text variant="titleMedium">
-                    {v.optionText + "\n"}
-                    {v.numVotes} Votos
-                  </Text>
-                </View>
-                <Text variant="titleMedium">{v.percentageVotes}%</Text>
-              </Surface>
-            ))}
-          </View>
+          <OptionCountView votes={votes}/>
         </View>
       </ScrollView>
     </GradientBackground>

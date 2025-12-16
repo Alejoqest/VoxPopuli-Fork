@@ -1,12 +1,13 @@
 import React from "react";
-import { Poll, Vote } from "../pollResults";
 import { View } from "react-native";
 import { ProgressBar, Text } from "react-native-paper";
 import { Colors } from "../../../../constants/colors";
+import { VoteResult } from "../../../models/Vote";
+import { PollResult } from "../../../models/Polls";
 
 type props = {
-  votes: Vote[];
-  poll: Poll;
+  votes: VoteResult[];
+  poll: PollResult;
 };
 
 const barChart = ({ votes, poll }: props) => {
@@ -23,7 +24,7 @@ const barChart = ({ votes, poll }: props) => {
               marginBottom: 10,
             }}
           >
-            <Text variant="titleSmall" style={{ width: 60 }}>{v.optionName}</Text>
+            <Text variant="titleSmall" style={{ width: 60 }}>{v.optionText}</Text>
             <View style={{ flex: 1, marginHorizontal: 10 }}>
               <ProgressBar
                 progress={v.percentageVotes / 100}
