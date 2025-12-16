@@ -11,7 +11,6 @@ import {
   Text,
 } from "react-native-paper";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import AppModal from "../../components/modal/modal";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { AppStackParamList } from "../../../../navigation/appStack";

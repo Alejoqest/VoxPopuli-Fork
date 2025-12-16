@@ -2,8 +2,6 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import { Animated, ScrollView, StyleSheet, View } from "react-native";
 import {
   Divider,
-  IconButton,
-  Surface,
   Text,
   SegmentedButtons,
 } from "react-native-paper";
@@ -11,8 +9,6 @@ import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
-import { Colors } from "../../../constants/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { voteService } from "../../../../backend/services/voteService";
 import { pollService } from "../../../../backend/services/pollService";
