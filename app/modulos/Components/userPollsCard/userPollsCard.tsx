@@ -12,7 +12,7 @@ type props = {
   navigation: NavigationProp<AppStackParamList>;
 };
 
-const browsePollsCard = ({ poll, navigation }: props) => {
+const userPollsCard = ({ poll, navigation }: props) => {
   const handlePress = () => {
     navigation.navigate("PollInterface", { id: poll.id });
   };
@@ -23,10 +23,7 @@ const browsePollsCard = ({ poll, navigation }: props) => {
         title={poll.title}
         titleNumberOfLines={3}
         titleVariant="titleLarge"
-        subtitle={`Creado por ${poll.profile? poll.profile.username : 'Desconocido'}`}
-        subtitleVariant="titleSmall"
         style={styles.title}
-        left={() => <AvatarIcon size={35} profile={poll.profile} />}
         right={() => <PollCardState status={poll.status}/>}
       />
       <Divider style={styles.text} />
@@ -50,7 +47,7 @@ const browsePollsCard = ({ poll, navigation }: props) => {
   );
 };
 
-export default browsePollsCard;
+export default userPollsCard;
 
 const styles = StyleSheet.create({
   title: {

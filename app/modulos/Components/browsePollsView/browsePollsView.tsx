@@ -1,17 +1,24 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import { ActivityIndicator, Divider, MD3DarkTheme, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Divider,
+  MD3DarkTheme,
+  Text,
+} from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import BrowsePollsCard from "../browsePollsCard/browsePollsCard";
 import { Poll } from "../../models/Polls";
+import UserPollsCard from "../userPollsCard/userPollsCard";
 
 type props = {
+  type: "user" | "browse";
   polls?: Poll[];
   navigation: NavigationProp<AppStackParamList>;
 };
 
-const browsePollsView = ({ polls, navigation }: props) => {
+const browsePollsView = ({ type, polls, navigation }: props) => {
   return (
     <View>
       <Divider style={styles.text} />
@@ -23,8 +30,10 @@ const browsePollsView = ({ polls, navigation }: props) => {
         />
       ) : polls.length !== 0 ? (
         polls.map((v) => {
-          return (
+          return type == "browse" ? (
             <BrowsePollsCard key={v.id} poll={v} navigation={navigation} />
+          ) : (
+            <UserPollsCard key={v.id} poll={v} navigation={navigation} />
           );
         })
       ) : (

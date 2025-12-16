@@ -121,7 +121,7 @@ const HomeScreen = () => {
         </Text>
 
         <ScrollView style={styles.container}>
-          <BrowsePollsView polls={polls} navigation={navigation} />
+          <BrowsePollsView type="user" polls={polls} navigation={navigation} />
         </ScrollView>
 
         <Button

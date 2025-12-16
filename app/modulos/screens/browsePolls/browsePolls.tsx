@@ -92,7 +92,7 @@ const BrowsePollsScreen = () => {
             style={styles.text}
           />
 
-          <BrowsePollsView polls={polls} navigation={navigation} />
+          <BrowsePollsView type="browse" polls={polls} navigation={navigation} />
         </ScrollView>
 
         <FAB
