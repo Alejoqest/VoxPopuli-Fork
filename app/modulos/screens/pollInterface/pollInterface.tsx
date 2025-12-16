@@ -177,7 +177,7 @@ const PollInterfaceScreen = ({ route }: props) => {
                   color={MD3DarkTheme.colors.primary}
                   size={16}
                 />{" "}
-                {remainingTime.hours}h {remainingTime.minutes}m restantes
+                {poll.status != "closed"? `${remainingTime.hours}h ${remainingTime.minutes} restantes` : `Terminado en ${new Date(poll.end_time).toLocaleDateString("es")}`}
               </Text>
             )}
           </Surface>
