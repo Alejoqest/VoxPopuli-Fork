@@ -8,36 +8,10 @@ import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
 import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
+import { registerErrors } from "../../models/AuthErrors";
+import { startRegisterErrors as startErrors } from "../../../constants/authStartErrors"
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Register">;
-
-type errorsTypes = {
-  notEmail: boolean;
-  emailEmpty: boolean;
-  usernameMax: boolean;
-  usernameMin: boolean;
-  usernameEmpty: boolean;
-  usernameInvalid: boolean;
-  passwordMin: boolean;
-  passwordMax: boolean;
-  passwordInvalid: boolean;
-  passwordEmpty: boolean;
-  passwordFailed: boolean;
-};
-
-const startErrors: errorsTypes = {
-  notEmail: false,
-  emailEmpty: false,
-  usernameMax: false,
-  usernameMin: false,
-  usernameEmpty: false,
-  usernameInvalid: false,
-  passwordMin: false,
-  passwordMax: false,
-  passwordInvalid: false,
-  passwordEmpty: false,
-  passwordFailed: false,
-};
 
 const RegisterScreen = () => {
   const navigation = useNavigation<NavigationProp>();
@@ -46,7 +20,7 @@ const RegisterScreen = () => {
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<errorsTypes>(startErrors);
+  const [errors, setErrors] = useState<registerErrors>(startErrors);
   const [authError, setAuthError] = useState<string | undefined>(undefined);
 
   const checkErrors = (): boolean => {
