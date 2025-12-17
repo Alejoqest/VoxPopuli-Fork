@@ -9,7 +9,7 @@ import { AuthStackParamList } from "../../../../navigation/authStack";
 import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
 import { registerErrors } from "../../models/AuthErrors";
-import { startRegisterErrors as startErrors } from "../../../constants/authStartErrors"
+import { startRegisterErrors as startErrors } from "../../../constants/authStartErrors";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Register">;
 

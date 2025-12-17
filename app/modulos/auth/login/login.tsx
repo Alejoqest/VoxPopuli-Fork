@@ -10,7 +10,7 @@ import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
 import Logo from "../../components/logo/logo";
 import { loginErrors } from "../../models/AuthErrors";
-import { startLoginErrors as startErrors } from "../../../constants/authStartErrors"
+import { startLoginErrors as startErrors } from "../../../constants/authStartErrors";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
 
