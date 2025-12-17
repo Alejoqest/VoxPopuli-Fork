@@ -228,11 +228,10 @@ const PollInterfaceScreen = ({ route }: props) => {
           visible={votingVisible}
           dismissable={false}
           onDismiss={() => setVotingVisible(false)}
+          title="Confirmar voto"
+          body="No podrás revertir tu voto."
+          icon="send-lock"
         >
-          <Text variant="headlineMedium" style={styles.title}>
-            Confirmar voto
-          </Text>
-          <Text style={styles.text}>No podrás revertir tu voto.</Text>
           <View style={styles.modalButtons}>
             <Button
               mode="elevated"

@@ -244,14 +244,10 @@ const CreatePollScreen = () => {
           visible={resetVisible}
           dismissable={false}
           onDismiss={() => setResetVisible(false)}
+          title="Restablecer formulario"
+          body={`¿Estás seguro que quieres resetear el formulario? \nToda la información se perderá.`}
+          icon="delete"
         >
-          <Text variant="headlineMedium" style={styles.title}>
-            Restablecer formulario
-          </Text>
-          <Text style={styles.text}>
-            ¿Estás seguro que quieres resetear el formulario? {"\n"}
-            Toda la información se perderá.
-          </Text>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
@@ -277,13 +273,10 @@ const CreatePollScreen = () => {
           visible={submitVisible}
           dismissable={false}
           onDismiss={() => setSubmitVisible(false)}
+          title="Publicar encuesta"
+          body="¿Estás seguro que quieres publicar la encuesta?"
+          icon="alert"
         >
-          <Text variant="headlineMedium" style={styles.title}>
-            Publicar encuesta
-          </Text>
-          <Text style={styles.text}>
-            ¿Estás seguro que quieres publicar la encuesta?
-          </Text>
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
