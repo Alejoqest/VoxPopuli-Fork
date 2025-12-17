@@ -9,30 +9,22 @@ import { AuthStackParamList } from "../../../../navigation/authStack";
 import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
 import Logo from "../../components/logo/logo";
+import { loginErrors } from "../../models/AuthErrors";
+import { startLoginErrors as startErrors } from "../../../constants/authStartErrors"
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Login">;
-
-type Errors = {
-  usernameEmpty: boolean;
-  passwordEmpty: boolean;
-};
-
-const initialErrors: Errors = {
-  usernameEmpty: false,
-  passwordEmpty: false,
-};
 
 const LoginScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [usernameOrEmail, setUsernameOrEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState<Errors>(initialErrors);
+  const [errors, setErrors] = useState<loginErrors>(startErrors);
   const [authError, setAuthError] = useState<string | undefined>(undefined);
 
   const handleLogin = async () => {
     setLoading(true);
-    setErrors(initialErrors);
+    setErrors(startErrors);
     setAuthError(undefined);
 
     if (checkErrors()) {
@@ -48,7 +40,7 @@ const LoginScreen = () => {
   };
 
   const checkErrors = (): boolean => {
-    const newErrors = { ...initialErrors };
+    const newErrors = { ...startErrors };
 
     if (!usernameOrEmail) newErrors.usernameEmpty = true;
     if (!password) newErrors.passwordEmpty = true;

@@ -1,4 +1,4 @@
-import { registerErrors } from "../modulos/models/AuthErrors";
+import { loginErrors, registerErrors } from "../modulos/models/AuthErrors";
 
 export const startRegisterErrors: registerErrors = {
   notEmail: false,
@@ -12,4 +12,9 @@ export const startRegisterErrors: registerErrors = {
   passwordInvalid: false,
   passwordEmpty: false,
   passwordFailed: false,
+};
+
+export const startLoginErrors: loginErrors = {
+  usernameEmpty: false,
+  passwordEmpty: false,
 };

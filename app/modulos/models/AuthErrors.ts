@@ -11,3 +11,8 @@ export type registerErrors = {
   passwordEmpty: boolean;
   passwordFailed: boolean;
 };
+
+export type loginErrors = {
+  usernameEmpty: boolean;
+  passwordEmpty: boolean;
+};
