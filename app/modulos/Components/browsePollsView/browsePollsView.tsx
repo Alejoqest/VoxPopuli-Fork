@@ -1,11 +1,6 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import {
-  ActivityIndicator,
-  Divider,
-  MD3DarkTheme,
-  Text,
-} from "react-native-paper";
+import { ActivityIndicator, MD3DarkTheme, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import BrowsePollsCard from "../browsePollsCard/browsePollsCard";
@@ -20,30 +15,27 @@ type props = {
 
 const browsePollsView = ({ type, polls, navigation }: props) => {
   return (
-    <>
-      <Divider style={styles.text} />
-      <View style={{ width: "100%" }}>
-        {!polls ? (
-          <ActivityIndicator
-            animating
-            color={MD3DarkTheme.colors.primary}
-            size={"large"}
-          />
-        ) : polls.length !== 0 ? (
-          polls.map((v) => {
-            return type == "browse" ? (
-              <BrowsePollsCard key={v.id} poll={v} navigation={navigation} />
-            ) : (
-              <UserPollsCard key={v.id} poll={v} navigation={navigation} />
-            );
-          })
-        ) : (
-          <View style={{ justifyContent: "center", alignItems: "center" }}>
-            <Text variant="titleLarge">No hay encuestas encontradas</Text>
-          </View>
-        )}
-      </View>
-    </>
+    <View style={{ width: "100%" }}>
+      {!polls ? (
+        <ActivityIndicator
+          animating
+          color={MD3DarkTheme.colors.primary}
+          size={"large"}
+        />
+      ) : polls.length !== 0 ? (
+        polls.map((v) => {
+          return type == "browse" ? (
+            <BrowsePollsCard key={v.id} poll={v} navigation={navigation} />
+          ) : (
+            <UserPollsCard key={v.id} poll={v} navigation={navigation} />
+          );
+        })
+      ) : (
+        <View style={{ justifyContent: "center", alignItems: "center" }}>
+          <Text variant="titleLarge">No hay encuestas encontradas</Text>
+        </View>
+      )}
+    </View>
   );
 };
 

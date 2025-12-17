@@ -1,6 +1,6 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { View, StyleSheet, ScrollView } from "react-native";
-import { Text, Button, Avatar } from "react-native-paper";
+import { Text, Button, Avatar, Divider } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
@@ -119,10 +119,12 @@ const HomeScreen = () => {
         >
           Mis Encuestas
         </Text>
-
+        
+        <Divider style={styles.margin} />
         <ScrollView style={styles.container}>
           <BrowsePollsView type="user" polls={polls} navigation={navigation} />
         </ScrollView>
+        <Divider style={styles.margin} />
 
         <Button
           mode="outlined"

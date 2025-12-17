@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { FAB, Searchbar, Text } from "react-native-paper";
+import { Divider, FAB, Searchbar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
@@ -92,36 +92,41 @@ const BrowsePollsScreen = () => {
   return (
     <GradientBackground>
       <View style={styles.form}>
-          <Text variant="displayMedium" style={styles.title}>
-            Explorar Encuestas
-          </Text>
+        <Text variant="displayMedium" style={styles.title}>
+          Explorar Encuestas
+        </Text>
 
-          <Searchbar
-            placeholder="Busca encuesta por tema..."
-            onChangeText={setSearch}
-            value={search}
-            onIconPress={changeSearch}
-            style={styles.text}
+        <Searchbar
+          placeholder="Busca encuesta por tema..."
+          onChangeText={setSearch}
+          value={search}
+          onIconPress={changeSearch}
+          style={styles.text}
+        />
+
+        <ScrollView
+          horizontal
+          style={{ marginBottom: 4, paddingVertical: 8, maxHeight: 50 }}
+        >
+          <OptionSearch
+            chips={stateContent}
+            value={searchStatus}
+            setValue={setSearchStatus}
           />
+          <OptionSearch
+            chips={orderContent}
+            value={searchOrder}
+            setValue={setSearchOrder}
+          />
+        </ScrollView>
 
-          <ScrollView horizontal style={{ paddingVertical: 8, maxHeight: 50 }}>
-            <OptionSearch
-              chips={stateContent}
-              value={searchStatus}
-              setValue={setSearchStatus}
-            />
-            <OptionSearch
-              chips={orderContent}
-              value={searchOrder}
-              setValue={setSearchOrder}
-            />
-          </ScrollView>
+        <Divider style={styles.text} />
 
-          <ScrollView
-            contentContainerStyle={styles.container}
-            style={{ flex: 1 }}
-            ref={scrollRef}
-          >
+        <ScrollView
+          contentContainerStyle={styles.container}
+          style={{ flex: 1 }}
+          ref={scrollRef}
+        >
           <BrowsePollsView
             type="browse"
             polls={polls}
