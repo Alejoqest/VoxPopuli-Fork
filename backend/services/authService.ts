@@ -19,6 +19,12 @@ export const authService = {
     },
 
     registerUser: async (email: string, password: string, username: string) => {
+        const { data: dataUser } = await supabase.from('profile').select('*').or(`email.eq.${email},username.eq.${username}`).single();
+
+        if (dataUser) {
+            return (`Ya existe una cuenta con ese ${dataUser.email == email ? 'email' : 'nombre de usuario'}`)
+        }
+
         const { data, error } = await supabase.auth.signUp({
             email,
             password,
