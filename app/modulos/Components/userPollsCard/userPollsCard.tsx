@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Card, Divider, Text } from "react-native-paper";
+import { Card, Divider, Icon, MD3DarkTheme, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
@@ -24,11 +24,16 @@ const userPollsCard = ({ poll, navigation }: props) => {
         titleNumberOfLines={3}
         titleVariant="titleLarge"
         style={styles.title}
-        right={() => <PollCardState status={poll.status}/>}
+        right={() => <PollCardState status={poll.status} />}
       />
       <Divider style={styles.text} />
       <Card.Content style={styles.cardContent}>
         <Text variant="bodyMedium">
+          <Icon
+            source="calendar-start-outline"
+            color={MD3DarkTheme.colors.primary}
+            size={16}
+          />{" "}
           Inicio: {new Date(poll.start_time).toLocaleDateString("es")}{" "}
           {new Date(poll.start_time).toLocaleTimeString("es", {
             hour: "2-digit",
@@ -36,6 +41,11 @@ const userPollsCard = ({ poll, navigation }: props) => {
           })}
         </Text>
         <Text variant="bodyMedium" style={{ marginBottom: 6 }}>
+          <Icon
+            source="timer-outline"
+            color={MD3DarkTheme.colors.primary}
+            size={16}
+          />{" "}
           Fin: {new Date(poll.end_time).toLocaleDateString("es")}{" "}
           {new Date(poll.end_time).toLocaleTimeString("es", {
             hour: "2-digit",

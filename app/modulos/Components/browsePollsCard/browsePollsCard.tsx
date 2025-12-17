@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet } from "react-native";
-import { Card, Divider, Text } from "react-native-paper";
+import { Card, Divider, Icon, MD3DarkTheme, Text } from "react-native-paper";
 import { NavigationProp } from "@react-navigation/native";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
@@ -23,15 +23,22 @@ const browsePollsCard = ({ poll, navigation }: props) => {
         title={poll.title}
         titleNumberOfLines={3}
         titleVariant="titleLarge"
-        subtitle={`Creado por ${poll.profile? poll.profile.username : 'Desconocido'}`}
+        subtitle={`Creado por ${
+          poll.profile ? poll.profile.username : "Desconocido"
+        }`}
         subtitleVariant="titleSmall"
         style={styles.title}
         left={() => <AvatarIcon size={35} profile={poll.profile} />}
-        right={() => <PollCardState status={poll.status}/>}
+        right={() => <PollCardState status={poll.status} />}
       />
       <Divider style={styles.text} />
       <Card.Content style={styles.cardContent}>
         <Text variant="bodyMedium">
+          <Icon
+            source="calendar-start-outline"
+            color={MD3DarkTheme.colors.primary}
+            size={16}
+          />{" "}
           Inicio: {new Date(poll.start_time).toLocaleDateString("es")}{" "}
           {new Date(poll.start_time).toLocaleTimeString("es", {
             hour: "2-digit",
@@ -39,6 +46,11 @@ const browsePollsCard = ({ poll, navigation }: props) => {
           })}
         </Text>
         <Text variant="bodyMedium" style={{ marginBottom: 6 }}>
+          <Icon
+            source="timer-outline"
+            color={MD3DarkTheme.colors.primary}
+            size={16}
+          />{" "}
           Fin: {new Date(poll.end_time).toLocaleDateString("es")}{" "}
           {new Date(poll.end_time).toLocaleTimeString("es", {
             hour: "2-digit",
