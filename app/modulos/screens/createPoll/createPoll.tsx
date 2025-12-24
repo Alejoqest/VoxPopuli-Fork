@@ -9,11 +9,11 @@ import {
 import { ScrollView, View, StyleSheet } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { useNavigation } from "@react-navigation/native";
-import DateTimePicker from "../../components/datetimepicker/datetimepicker";
+import DateTimePicker from "../../Components/datetimepicker/datetimepicker";
 import OptionsForm from "./components/optionsForm";
 import NotificationSwitch from "./components/notificationSwitch";
-import AppModal from "../../components/modal/modal";
-import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import AppModal from "../../Components/modal/modal";
+import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { pollService } from "../../../../backend/services/pollService";
 import { OptionCreated } from "../../models/Options";

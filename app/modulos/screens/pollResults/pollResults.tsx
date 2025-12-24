@@ -6,7 +6,7 @@ import {
   SegmentedButtons,
 } from "react-native-paper";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import BarChart from "./components/barChart";
 import PieChart from "./components/pieChart";
 import { AppStackParamList } from "../../../../navigation/appStack";
@@ -15,7 +15,7 @@ import { pollService } from "../../../../backend/services/pollService";
 import { PollResult } from "../../models/Polls";
 import { VoteResult } from "../../models/Vote";
 import { RouteProp } from "@react-navigation/native";
-import Loading from "../../components/loading/loading";
+import Loading from "../../Components/loading/loading";
 import OptionCountView from "./components/optionCountView";
 
 type NavigationProp = NativeStackNavigationProp<

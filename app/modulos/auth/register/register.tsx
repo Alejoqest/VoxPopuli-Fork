@@ -3,11 +3,11 @@ import { StyleSheet, View } from "react-native";
 import { Text, TextInput, Button, HelperText } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import { authService } from "../../../../backend/services/authService";
 import { AuthStackParamList } from "../../../../navigation/authStack";
-import AuthError from "../../components/authError/authError";
-import PasswordInput from "../../components/passwordInput/passwordInput";
+import AuthError from "../../Components/authError/authError";
+import PasswordInput from "../../Components/passwordInput/passwordInput";
 import { registerErrors } from "../../models/AuthErrors";
 import { startRegisterErrors as startErrors } from "../../../constants/authStartErrors";
 

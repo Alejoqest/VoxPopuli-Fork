@@ -11,17 +11,17 @@ import {
   Text,
 } from "react-native-paper";
 import { RouteProp, useNavigation } from "@react-navigation/native";
-import AppModal from "../../components/modal/modal";
-import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import AppModal from "../../Components/modal/modal";
+import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Option } from "../../models/Options";
 import { Poll } from "../../models/Polls";
 import { pollService } from "../../../../backend/services/pollService";
 import { voteService } from "../../../../backend/services/voteService";
 import { Vote } from "../../models/Vote";
-import AvatarIcon from "../../components/avatarIcon/avatarIcon";
-import Loading from "../../components/loading/loading";
-import PollCardState from "../../components/pollState/pollState";
+import AvatarIcon from "../../Components/avatarIcon/avatarIcon";
+import Loading from "../../Components/loading/loading";
+import PollCardState from "../../Components/pollState/pollState";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,

@@ -3,8 +3,8 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { Text, Button, Avatar, Divider } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
-import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
-import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import BrowsePollsView from "../../Components/browsePollsView/browsePollsView";
+import GradientBackground from "../../Components/gradientBackground/gradientBackground";
 import { User } from "@supabase/supabase-js";
 import { authService } from "../../../../backend/services/authService";
 import { AppStackParamList } from "../../../../navigation/appStack";
@@ -12,7 +12,7 @@ import { Profile } from "../../models/Profile";
 import { profileService } from "../../../../backend/services/profileService";
 import { pollService } from "../../../../backend/services/pollService";
 import { Poll } from "../../models/Polls";
-import Loading from "../../components/loading/loading";
+import Loading from "../../Components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<AppStackParamList, "Home">;
 
