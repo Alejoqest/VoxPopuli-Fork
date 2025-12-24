@@ -3,8 +3,8 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import { Divider, FAB, Searchbar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
-import GradientBackground from "../../Components/gradientBackground/gradientBackground";
-import BrowsePollsView from "../../Components/browsePollsView/browsePollsView";
+import GradientBackground from "../../components/gradientBackground/gradientBackground";
+import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
@@ -12,7 +12,7 @@ import {
   pollService,
   searchQuery,
 } from "../../../../backend/services/pollService";
-import OptionSearch from "../../Components/optionSearch/optionSearch";
+import OptionSearch from "../../components/optionSearch/optionSearch";
 import {
   orderContent,
   stateContent,
