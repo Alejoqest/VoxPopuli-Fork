@@ -16,6 +16,9 @@ const PollResultsScreen = lazy(
 const BrowsePollsScreen = lazy(
   () => import("../app/modulos/screens/browsePolls/browsePolls")
 );
+const VoteUserScreen = lazy(
+  () => import("../app/modulos/screens/voteUser/voteUser")
+);
 
 export type AppStackParamList = {
   Home: undefined;
@@ -23,6 +26,7 @@ export type AppStackParamList = {
   BrowsePoll: undefined;
   PollInterface: { id: number };
   PollResults: { id: number };
+  VoteUser: {id: number}
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -51,6 +55,7 @@ const AppStack = () => {
       <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
       <Stack.Screen name="PollResults" component={PollResultsScreen} />
       <Stack.Screen name="BrowsePoll" component={BrowsePollsScreen} />
+      <Stack.Screen name="VoteUser" component={VoteUserScreen} />
     </Stack.Navigator>
   );
 };
