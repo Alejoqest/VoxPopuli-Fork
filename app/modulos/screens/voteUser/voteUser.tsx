@@ -8,7 +8,7 @@ import { ScrollView, StyleSheet, View } from "react-native";
 import { profileService } from "../../../../backend/services/profileService";
 import { voteService } from "../../../../backend/services/voteService";
 import Loading from "../../components/loading/loading";
-import { Divider, List, Surface, Text } from "react-native-paper";
+import { Divider, IconButton, List, Surface, Text } from "react-native-paper";
 import AvatarIcon from "../../components/avatarIcon/avatarIcon";
 import { Colors } from "../../../constants/colors";
 
@@ -63,7 +63,7 @@ const VoteUserScreen = ({ route }: props) => {
                   key={v.profile?.id || i}
                   title={v.profile?.username || "Desconocido"}
                   left={() => <AvatarIcon size={35} profile={v.profile} />}
-                  //right={}
+                  right={() => <IconButton icon="chevron-right"/>}
                   titleNumberOfLines={1}
                   style={{
                     padding: 16,
