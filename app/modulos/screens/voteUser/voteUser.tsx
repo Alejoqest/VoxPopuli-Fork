@@ -62,11 +62,11 @@ const VoteUserScreen = ({ route }: props) => {
                 <List.Item
                   key={v.profile?.id || i}
                   title={v.profile?.username || "Desconocido"}
-                  left={() => <AvatarIcon size={35} profile={v.profile} />}
+                  left={() => <AvatarIcon size={45} profile={v.profile}/>}
                   right={() => <IconButton icon="chevron-right"/>}
                   titleNumberOfLines={1}
                   style={{
-                    padding: 16,
+                    padding: 8,
                   }}
                 />
                 /*{profiles.length - 1 != i && (
