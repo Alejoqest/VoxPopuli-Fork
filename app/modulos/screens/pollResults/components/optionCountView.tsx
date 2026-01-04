@@ -3,9 +3,9 @@ import { VoteResult } from "../../../models/Vote";
 import { StyleSheet, View } from "react-native";
 import {
   ActivityIndicator,
+  Card,
   IconButton,
   MD3DarkTheme,
-  Surface,
   Text,
 } from "react-native-paper";
 import { Colors } from "../../../../constants/colors";
@@ -28,35 +28,27 @@ const optionCountView = ({ votes, navigation }: Props) => {
     );
 
   return (
-    <View style={styles.text}>
+    <View style={styles.marginBottom}>
       {votes.map((v, i) => (
-        <Surface
+        <Card
           key={v.id}
-          style={[
-            styles.surface,
-            styles.textSuface,
-            {
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-            },
-          ]}
+          style={styles.marginBottom}
+          onPress={() => navigation.navigate("VoteUser", { id: v.id })}
         >
-          <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <IconButton
-              icon="circle-outline"
-              containerColor={Colors[i]}
-              onPress={() =>
-                navigation.navigate("VoteUser", { id: v.id })
-              }
-            />
-            <Text variant="titleMedium">
-              {v.optionText + "\n"}
-              {v.numVotes} Votos
-            </Text>
-          </View>
-          <Text variant="titleMedium">{v.percentageVotes}%</Text>
-        </Surface>
+          <Card.Title
+            title={v.optionText}
+            titleVariant="titleMedium"
+            titleNumberOfLines={2}
+            subtitle={v.numVotes + " Votos"}
+            subtitleVariant="titleMedium"
+            left={() => (
+              <IconButton icon="circle-outline" containerColor={Colors[i]} />
+            )}
+            leftStyle={{ marginRight: 32 }}
+            right={() => <Text>{v.percentageVotes}%</Text>}
+            rightStyle={{ marginRight: 16 }}
+          />
+        </Card>
       ))}
     </View>
   );
@@ -65,25 +57,5 @@ const optionCountView = ({ votes, navigation }: Props) => {
 export default optionCountView;
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1 },
-  form: {
-    flex: 1,
-    width: "100%",
-    paddingHorizontal: 16,
-    alignItems: "stretch",
-  },
-  title: { marginTop: 16, marginBottom: 16 },
-  text: { marginBottom: 16 },
-  surface: {
-    justifyContent: "space-between",
-    marginBottom: 16,
-    borderRadius: 20,
-    paddingLeft: 22,
-  },
-  textSuface: {
-    padding: 12,
-    paddingLeft: 6,
-    flexDirection: "row",
-    alignItems: "center",
-  },
+  marginBottom: { marginBottom: 16 },
 });
