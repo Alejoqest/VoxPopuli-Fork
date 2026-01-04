@@ -9,12 +9,15 @@ import {
   Text,
 } from "react-native-paper";
 import { Colors } from "../../../../constants/colors";
+import { AppStackParamList } from "../../../../../navigation/appStack";
+import { NavigationProp } from "@react-navigation/native";
 
 type Props = {
   votes?: VoteResult[];
+  navigation: NavigationProp<AppStackParamList>;
 };
 
-const optionCountView = ({ votes }: Props) => {
+const optionCountView = ({ votes, navigation }: Props) => {
   if (!votes)
     return (
       <ActivityIndicator
@@ -40,7 +43,13 @@ const optionCountView = ({ votes }: Props) => {
           ]}
         >
           <View style={{ flexDirection: "row", alignItems: "center" }}>
-            <IconButton icon="circle-outline" containerColor={Colors[i]} />
+            <IconButton
+              icon="circle-outline"
+              containerColor={Colors[i]}
+              onPress={() =>
+                navigation.navigate("VoteUser", { id: v.id })
+              }
+            />
             <Text variant="titleMedium">
               {v.optionText + "\n"}
               {v.numVotes} Votos

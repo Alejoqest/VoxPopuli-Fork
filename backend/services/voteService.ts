@@ -30,6 +30,18 @@ export const voteService = {
         return data ?? [];
     },
 
+    getVoteByOption: async (optionId: number) => {
+        const { data, error } = await supabase
+            .from('vote_view')
+            .select('*')
+            .eq('id', optionId)
+            .single();
+        
+        if (error) throw new Error(error.message);
+
+        return data;
+    },
+
     onVotesChange(pollId: number, callback: () => void) {
         const channel = supabase
             .channel(`poll_votes_${pollId}`)

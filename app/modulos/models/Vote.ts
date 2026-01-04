@@ -1,3 +1,5 @@
+import { ProfileAvatar } from "./Profile";
+
 export type Vote = {
     id?: number;
     voted_at?: Date;
@@ -12,4 +14,9 @@ export type VoteResult = {
     optionOrder: number;
     numVotes: number;
     percentageVotes: number;
+}
+
+export type VoteUser = {
+    user_id: string | null;
+    profile: ProfileAvatar | null;
 }

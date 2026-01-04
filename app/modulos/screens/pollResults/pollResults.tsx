@@ -14,7 +14,7 @@ import { voteService } from "../../../../backend/services/voteService";
 import { pollService } from "../../../../backend/services/pollService";
 import { PollResult } from "../../models/Polls";
 import { VoteResult } from "../../models/Vote";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import Loading from "../../components/loading/loading";
 import OptionCountView from "./components/optionCountView";
 
@@ -29,6 +29,7 @@ type props = {
 
 const PollResultsScreen = ({route} : props) => {
   const pollId = route.params.id;
+  const navigation = useNavigation<NavigationProp>();
   const [poll, setPoll] = useState<PollResult | null>(null);
   const [votes, setVotes] = useState<VoteResult[]>([]);
   const [chart, setChart] = useState("bar");
@@ -108,7 +109,7 @@ const PollResultsScreen = ({route} : props) => {
 
           <Divider style={styles.text} />
 
-          <OptionCountView votes={votes}/>
+          <OptionCountView votes={votes} navigation={navigation}/>
         </View>
       </ScrollView>
     </GradientBackground>
