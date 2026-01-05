@@ -56,26 +56,36 @@ const VoteUserScreen = ({ route }: props) => {
             <List.Subheader variant="titleSmall">
               Votos totales: {vote.numVotes}
             </List.Subheader>
-            {profiles.map((v, i) => {
-              return (
-                //<>
-                <List.Item
-                  key={v.profile?.id || i}
-                  title={v.profile?.username || "Desconocido"}
-                  left={() => <AvatarIcon size={45} profile={v.profile}/>}
-                  right={() => <IconButton icon="chevron-right"/>}
-                  titleNumberOfLines={1}
-                  style={{
-                    padding: 8,
-                  }}
-                />
-                /*{profiles.length - 1 != i && (
+            <Divider style={styles.text} />
+            {profiles.length == 0 ? (
+              <List.Item
+                title="No hay votos"
+                titleStyle={{ textAlign: "center" }}
+              />
+            ) : (
+              profiles.map((v, i) => {
+                return (
+                  //<>
+                  <List.Item
+                    key={v.profile?.id || i}
+                    title={v.profile?.username || "Desconocido"}
+                    left={() => <AvatarIcon size={45} profile={v.profile} />}
+                    right={() =>
+                      v.profile && <IconButton icon="chevron-right" />
+                    }
+                    titleNumberOfLines={1}
+                    style={{
+                      padding: 8,
+                    }}
+                  />
+                  /*{profiles.length - 1 != i && (
                     <Divider 
                     style={{ marginVertical: 8, padding: 1 }} />
                   )}
                 </>*/
-              );
-            })}
+                );
+              })
+            )}
           </List.Section>
           {
             //</Surface>
@@ -96,7 +106,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     alignItems: "stretch",
   },
-  title: { marginTop: 24, marginBottom: 16, fontWeight: "bold" },
+  title: { marginTop: 8, marginBottom: 16, fontWeight: "bold" },
+  text: { marginBottom: 16 },
   surface: {
     justifyContent: "space-between",
     marginBottom: 16,
