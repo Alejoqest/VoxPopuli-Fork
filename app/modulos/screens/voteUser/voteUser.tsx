@@ -1,16 +1,16 @@
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 import React, { useEffect, useState } from "react";
 import { AppStackParamList } from "../../../../navigation/appStack";
-import { RouteProp } from "@react-navigation/native";
+import { RouteProp, useNavigation } from "@react-navigation/native";
 import { VoteResult, VoteUser } from "../../models/Vote";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import { ScrollView, StyleSheet, View } from "react-native";
 import { profileService } from "../../../../backend/services/profileService";
 import { voteService } from "../../../../backend/services/voteService";
 import Loading from "../../components/loading/loading";
-import { Divider, IconButton, List, Surface, Text } from "react-native-paper";
-import AvatarIcon from "../../components/avatarIcon/avatarIcon";
+import { Text } from "react-native-paper";
 import { Colors } from "../../../constants/colors";
+import UserList from "./components/userList";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -23,6 +23,7 @@ type props = {
 
 const VoteUserScreen = ({ route }: props) => {
   const optionId = route.params.id;
+  const navigation = useNavigation<NavigationProp>();
   const [vote, setVote] = useState<VoteResult>();
   const [profiles, setProfiles] = useState<VoteUser[]>();
 
@@ -52,41 +53,7 @@ const VoteUserScreen = ({ route }: props) => {
           {
             //<Surface style={styles.surface}>
           }
-          <List.Section style={{ margin: 0 }}>
-            <List.Subheader variant="titleSmall">
-              Votos totales: {vote.numVotes}
-            </List.Subheader>
-            <Divider style={styles.text} />
-            {profiles.length == 0 ? (
-              <List.Item
-                title="No hay votos"
-                titleStyle={{ textAlign: "center" }}
-              />
-            ) : (
-              profiles.map((v, i) => {
-                return (
-                  //<>
-                  <List.Item
-                    key={v.profile?.id || i}
-                    title={v.profile?.username || "Desconocido"}
-                    left={() => <AvatarIcon size={45} profile={v.profile} />}
-                    right={() =>
-                      v.profile && <IconButton icon="chevron-right" />
-                    }
-                    titleNumberOfLines={1}
-                    style={{
-                      padding: 8,
-                    }}
-                  />
-                  /*{profiles.length - 1 != i && (
-                    <Divider 
-                    style={{ marginVertical: 8, padding: 1 }} />
-                  )}
-                </>*/
-                );
-              })
-            )}
-          </List.Section>
+          <UserList vote={vote} profiles={profiles} navigation={navigation} />
           {
             //</Surface>
           }
