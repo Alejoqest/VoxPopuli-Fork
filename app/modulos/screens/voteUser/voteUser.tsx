@@ -50,11 +50,9 @@ const VoteUserScreen = ({ route }: props) => {
           >
             {vote.optionText}
           </Text>
-          {
-            //<Surface style={styles.surface}>
-          }
           <UserList vote={vote} profiles={profiles} navigation={navigation} />
           {
+            //<Surface style={styles.surface}>
             //</Surface>
           }
         </View>
@@ -66,7 +64,10 @@ const VoteUserScreen = ({ route }: props) => {
 export default VoteUserScreen;
 
 const styles = StyleSheet.create({
-  container: { flexGrow: 1 },
+  container: {
+    flexGrow: 1,
+    paddingBottom: 75,
+  },
   form: {
     flex: 1,
     width: "100%",

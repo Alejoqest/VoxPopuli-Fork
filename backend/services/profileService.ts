@@ -15,15 +15,14 @@ export const profileService = {
         return data;
     },
 
-    getUsersByVote: async (optionId: number) : Promise<VoteUser[]> => {
+    getUsersByVote: async (optionId: number): Promise<VoteUser[]> => {
         const { data, error } = await supabase
             .from('vote')
             .select('*, profile(id, username, color)')
-            .eq('option_id', optionId);
-        
+            .eq('option_id', optionId)
+            .order('voted_at', { ascending: false });
+
         if (error) throw new Error(error.message);
-        
-        //const profiles = data.flatMap(v => v.profile ?? []);
 
         return data || [];
     },

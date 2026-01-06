@@ -45,7 +45,9 @@ const optionCountView = ({ votes, navigation }: Props) => {
               <IconButton icon="circle-outline" containerColor={Colors[i]} />
             )}
             leftStyle={{ marginRight: 32 }}
-            right={() => <Text>{v.percentageVotes}%</Text>}
+            right={() => (
+              <Text variant="titleMedium">{v.percentageVotes}%</Text>
+            )}
             rightStyle={{ marginRight: 16 }}
           />
         </Card>
