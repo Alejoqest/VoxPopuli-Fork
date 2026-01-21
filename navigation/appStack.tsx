@@ -1,7 +1,9 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import React, { lazy } from "react";
+import React, { lazy, ReactNode, useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header from "../app/modulos/components/header/header";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { AuthContext } from "../app/modulos/context/authContext";
 
 const HomeScreen = lazy(() => import("../app/modulos/screens/profile/profile"));
 const CreatePollScreen = lazy(
@@ -42,8 +44,30 @@ type PollResultsScreenProps = NativeStackScreenProps<
   "PollResults"
 >;
 
+type Props = {
+    children: ReactNode;
+  };
+
+  const AuthProvider = ({ children }: Props) => {
+    const [userId, setUserId] = useState<string | null>(null);
+
+    useEffect(() => {
+      const loadUser = async () => {
+        const id = await AsyncStorage.getItem("user_id");
+        console.log(id);
+        setUserId(id);
+      };
+      loadUser();
+    }, []);
+
+    return (
+      <AuthContext.Provider value={{ userId }}>{children}</AuthContext.Provider>
+    );
+  };
+
 const AppStack = () => {
   return (
+    <AuthProvider>
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
@@ -58,6 +82,7 @@ const AppStack = () => {
       <Stack.Screen name="BrowsePoll" component={BrowsePollsScreen} />
       <Stack.Screen name="VoteUser" component={VoteUserScreen} />
     </Stack.Navigator>
+    </AuthProvider>
   );
 };
 
