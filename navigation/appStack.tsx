@@ -3,30 +3,31 @@ import React, { lazy } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Header from "../app/modulos/components/header/header";
 
-const HomeScreen = lazy(() => import("../app/modulos/screens/home/home"));
+const HomeScreen = lazy(() => import("../app/modulos/screens/profile/profile"));
 const CreatePollScreen = lazy(
-  () => import("../app/modulos/screens/createPoll/createPoll")
+  () => import("../app/modulos/screens/createPoll/createPoll"),
 );
 const PollInterfaceScreen = lazy(
-  () => import("../app/modulos/screens/pollInterface/pollInterface")
+  () => import("../app/modulos/screens/pollInterface/pollInterface"),
 );
 const PollResultsScreen = lazy(
-  () => import("../app/modulos/screens/pollResults/pollResults")
+  () => import("../app/modulos/screens/pollResults/pollResults"),
 );
 const BrowsePollsScreen = lazy(
-  () => import("../app/modulos/screens/browsePolls/browsePolls")
+  () => import("../app/modulos/screens/browsePolls/browsePolls"),
 );
 const VoteUserScreen = lazy(
-  () => import("../app/modulos/screens/voteUser/voteUser")
+  () => import("../app/modulos/screens/voteUser/voteUser"),
 );
 
 export type AppStackParamList = {
   Home: undefined;
+  Profile: { id?: string };
   CreatePoll: undefined;
   BrowsePoll: undefined;
   PollInterface: { id: number };
   PollResults: { id: number };
-  VoteUser: {id: number}
+  VoteUser: { id: number };
 };
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
@@ -48,9 +49,9 @@ const AppStack = () => {
         headerShown: true,
         header: (props) => <Header {...props} />,
       }}
-      initialRouteName={"Home"}
+      initialRouteName={"Profile"}
     >
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Profile" component={HomeScreen} />
       <Stack.Screen name="CreatePoll" component={CreatePollScreen} />
       <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
       <Stack.Screen name="PollResults" component={PollResultsScreen} />

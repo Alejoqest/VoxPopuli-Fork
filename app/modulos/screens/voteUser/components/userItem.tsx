@@ -10,12 +10,12 @@ type Props = {
   navigation: NavigationProp<AppStackParamList>;
 };
 
-const userItem = ({ vote }: Props) => {
+const userItem = ({ vote, navigation }: Props) => {
   return (
     <List.Item
       title={vote.profile?.username || "Desconocido"}
       left={() => <AvatarIcon size={45} profile={vote.profile} />}
-      right={() => vote.profile && <IconButton icon="chevron-right" />}
+      right={() => vote.profile && <IconButton icon="chevron-right" onPress={() => navigation.navigate("Profile", {id : vote.profile?.id!})}/>}
       titleNumberOfLines={1}
       style={{
         padding: 8,

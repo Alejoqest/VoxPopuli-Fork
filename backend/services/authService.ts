@@ -1,6 +1,7 @@
 import { Session } from "@supabase/supabase-js";
 import { Colors } from "../../app/constants/colors";
 import { supabase } from "../server/supabase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export const authService = {
     getSession: async (): Promise<Session | null> => {
@@ -47,7 +48,10 @@ export const authService = {
             username: username,
             color: color
         })
-        return profileError?.message || null;
+
+        if (profileError?.message) return profileError.message;
+
+        await AsyncStorage.setItem('user_id', user.id);
     },
 
     login: async (text: string, password: string) => {
@@ -67,10 +71,13 @@ export const authService = {
             if (loginError.message.includes('Invalid login credentials')) return ('Contraseña introducida es incorrecta.');
         }
 
-        return loginError?.message || null;
+        if (loginError?.message) return loginError.message;
+
+        await AsyncStorage.setItem('user_id', data.id)
     },
 
     logoutUser: async () => {
         await supabase.auth.signOut();
+        await AsyncStorage.removeItem('user_id')
     }
 }
