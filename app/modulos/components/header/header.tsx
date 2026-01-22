@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 import { Appbar, Divider, IconButton, Menu } from "react-native-paper";
 import { getHeaderTitle } from "@react-navigation/elements";
 import { NativeStackHeaderProps } from "@react-navigation/native-stack";
@@ -8,7 +8,7 @@ import { AuthContext } from "../../context/authContext";
 
 type ProfileParams = {
   id?: string;
-}
+};
 
 const Header = ({
   navigation,
@@ -31,7 +31,6 @@ const Header = ({
 
   const handleLogout = async () => {
     await authService.logoutUser();
-    navigation.navigate("Login");
   };
 
   const openMenu = (): void => setVisible(true);
@@ -54,10 +53,10 @@ const Header = ({
           <IconButton icon={"menu"} iconColor="white" onPress={openMenu} />
         }
       >
-        {back && title !== "Home" ? (
+        {back && title !== "Profile" && showBackButton ? (
           <>
             <Menu.Item
-              onPress={() => navigate("Home")}
+              onPress={() => navigate("Profile")}
               title="Hogar"
               leadingIcon={"home"}
             />

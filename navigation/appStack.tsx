@@ -54,7 +54,6 @@ type Props = {
     useEffect(() => {
       const loadUser = async () => {
         const id = await AsyncStorage.getItem("user_id");
-        console.log(id);
         setUserId(id);
       };
       loadUser();

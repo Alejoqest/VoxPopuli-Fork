@@ -141,8 +141,8 @@ const PollInterfaceScreen = ({ route }: props) => {
           </View>
 
           <View style={styles.creatorContainer}>
-            <AvatarIcon size={32} profile={poll.profile} />
-            <Text variant="bodyMedium" style={styles.creator}>
+            <AvatarIcon size={32} profile={poll.profile} navigation={navigation}/>
+            <Text variant="bodyMedium" style={styles.creator} onPress={() => poll.profile && navigation.navigate("Profile", {id : poll.profile.id})}>
               Creado por {poll.profile?.username || "Desconocido"}
             </Text>
           </View>

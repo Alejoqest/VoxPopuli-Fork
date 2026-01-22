@@ -15,7 +15,7 @@ const userItem = ({ vote, navigation }: Props) => {
     <List.Item
       title={vote.profile?.username || "Desconocido"}
       left={() => <AvatarIcon size={45} profile={vote.profile} />}
-      right={() => vote.profile && <IconButton icon="chevron-right" onPress={() => navigation.navigate("Profile", {id : vote.profile?.id!})}/>}
+      right={() => vote.profile && <IconButton icon="chevron-right" onPress={() => navigation.navigate("Profile", {id : vote.profile?.id})}/>}
       titleNumberOfLines={1}
       style={{
         padding: 8,
