@@ -10,6 +10,7 @@ import AuthError from "../../components/authError/authError";
 import PasswordInput from "../../components/passwordInput/passwordInput";
 import { registerErrors } from "../../models/AuthErrors";
 import { startRegisterErrors as startErrors } from "../../../constants/authStartErrors";
+import Logo from "../../components/logo/logo";
 
 type NavigationProp = NativeStackNavigationProp<AuthStackParamList, "Register">;
 
@@ -70,6 +71,9 @@ const RegisterScreen = () => {
   return (
     <GradientBackground>
       <View style={styles.container}>
+        <View style={{ marginBottom: 32 }}>
+          <Logo />
+        </View>
         <Text variant="headlineMedium" style={{ marginBottom: 24 }}>
           Crear una cuenta
         </Text>
