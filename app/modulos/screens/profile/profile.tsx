@@ -5,7 +5,6 @@ import { RouteProp, useNavigation } from "@react-navigation/native";
 import React, { useState, useEffect } from "react";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
-import { User } from "@supabase/supabase-js";
 import { authService } from "../../../../backend/services/authService";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Profile } from "../../models/Profile";
@@ -23,7 +22,6 @@ type props = {
 
 const ProfileScreen = ({ route }: props) => {
   const navigation = useNavigation<NavigationProp>();
-  const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
   const [loading, setLoading] = useState(true);
@@ -36,11 +34,8 @@ const ProfileScreen = ({ route }: props) => {
       const userId = await AsyncStorage.getItem("user_id");
 
       if (!userId) return;
-      console.log(userId);
 
       const profileId = (!route.params) ? userId : route.params!.id!;
-
-      console.log(profileId)
 
       if (profileId == userId) setIsHome(true);
 
@@ -49,19 +44,6 @@ const ProfileScreen = ({ route }: props) => {
 
       const poll = await pollService.getPollsByUserId(profileId);
       setPolls(poll);
-      /*const sessionUser = await authService
-        .getSession()
-        .then((s) => s?.user ?? null);
-
-      setUser(sessionUser);
-
-      if (sessionUser) {
-        const data = await profileService.getUser(sessionUser.id);
-        setProfile(data);
-
-        const poll = await pollService.getPollsByUserId(sessionUser.id);
-        setPolls(poll);
-      }*/
 
       setLoading(false);
     };
@@ -86,7 +68,7 @@ const ProfileScreen = ({ route }: props) => {
     return () => {
       if (unsubscribe) unsubscribe();
     };
-  }, [user]);
+  }, [profile]);
 
   const handleLogout = async () => {
     await authService.logoutUser();
