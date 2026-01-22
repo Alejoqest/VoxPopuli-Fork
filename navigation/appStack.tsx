@@ -5,7 +5,7 @@ import Header from "../app/modulos/components/header/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../app/modulos/context/authContext";
 
-const HomeScreen = lazy(() => import("../app/modulos/screens/profile/profile"));
+const ProfileScreen = lazy(() => import("../app/modulos/screens/profile/profile"));
 const CreatePollScreen = lazy(
   () => import("../app/modulos/screens/createPoll/createPoll"),
 );
@@ -23,7 +23,6 @@ const VoteUserScreen = lazy(
 );
 
 export type AppStackParamList = {
-  Home: undefined;
   Profile: { id?: string };
   CreatePoll: undefined;
   BrowsePoll: undefined;
@@ -74,7 +73,7 @@ const AppStack = () => {
       }}
       initialRouteName={"Profile"}
     >
-      <Stack.Screen name="Profile" component={HomeScreen} />
+      <Stack.Screen name="Profile" component={ProfileScreen} />
       <Stack.Screen name="CreatePoll" component={CreatePollScreen} />
       <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
       <Stack.Screen name="PollResults" component={PollResultsScreen} />

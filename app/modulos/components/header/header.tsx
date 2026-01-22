@@ -53,7 +53,7 @@ const Header = ({
           <IconButton icon={"menu"} iconColor="white" onPress={openMenu} />
         }
       >
-        {back && title !== "Profile" && showBackButton ? (
+        {back && showBackButton ? (
           <>
             <Menu.Item
               onPress={() => navigate("Profile")}
