@@ -1,6 +1,7 @@
 export type Poll = {
     id: number;
     title: string;
+    created_at: string;
     description?: string;
     start_time: Date;
     end_time: Date;

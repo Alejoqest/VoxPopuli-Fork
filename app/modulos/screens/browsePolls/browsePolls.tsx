@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Divider, FAB, Searchbar, Text } from "react-native-paper";
+import { Button, Divider, FAB, Searchbar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
@@ -27,34 +27,21 @@ const BrowsePollsScreen = () => {
   const navigation = useNavigation<NavigationProp>();
   const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
   const [search, setSearch] = useState<string>("");
-  //const [username, setUsername] = useState<string | null>(null);
   const [searchStatus, setSearchStatus] = useState<string>("all");
   const [searchOrder, setSearchOrder] = useState<string>("");
+  const [count, setCount] = useState<number>();
+  const [preSearch, setPreSearch] = useState<string>("");
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
-    /*const getUsername = async () => {
-      const savedUsername = await AsyncStorage.getItem("username");
-      if (savedUsername) {
-        setUsername(savedUsername);
-        console.log("Usuario actual:", savedUsername);
-      } else {
-        console.warn("No se encontró el username en memoria");
-      }
-    };
-    getUsername();*/
     let unsubscribe: (() => void) | null = null;
-
     const subscribe = async () => {
       unsubscribe = await pollService.onPollUpdate(async () => {
         changeSearch();
       });
     };
-
     subscribe();
-
     changeSearch();
-
     return () => {
       if (unsubscribe) unsubscribe();
     };
@@ -68,13 +55,37 @@ const BrowsePollsScreen = () => {
     scrollRef.current?.scrollTo({ y: 0, animated: true });
   };
 
-  const changeSearch = async () => {
-    setPolls(undefined);
-
-    const text = search.toLowerCase();
-
+  const getMorePolls = async () => {
+    if (!polls || count == polls!.length) return;
+    const lastValue = polls[polls!.length - 1]!.created_at;
     const order = searchOrder ? true : false;
+    const query: searchQuery = {
+      text: preSearch,
+      state: searchStatus,
+      order: order,
+      cursor: lastValue,
+    };
+    try {
+      const { data } = await pollService.getPolls(query);
+      const newPolls = polls.concat(data);
+      setPolls(newPolls);
+    } catch (err) {
+      console.log(err);
+    }
+  };
 
+  //TODO create another function to load more.
+  //TODO creates another setting that adds to the results
+  //TODO add a function trigger in the pollresults that send the last index array to the loading more function
+  //TODO add logic in the pollresults so the dettectds the total and compare to the total of the list to put the load more bnt
+  //TODO create log to store queries to avoid reseting params when queing it
+  //TODO create a more results btn (compoaraes the total amount with the )
+
+  const changeSearch = async () => {
+    setCount(undefined);
+    setPolls(undefined);
+    const text = search.toLowerCase();
+    const order = searchOrder ? true : false;
     const query: searchQuery = {
       text: text,
       state: searchStatus,
@@ -83,7 +94,10 @@ const BrowsePollsScreen = () => {
 
     try {
       const data = await pollService.getPolls(query);
-      setPolls(data);
+      console.log(data.count);
+      setCount(data.count || 0);
+      setPolls(data.data);
+      setPreSearch(text);
     } catch (err) {
       console.log(err);
     }
@@ -104,10 +118,7 @@ const BrowsePollsScreen = () => {
           style={styles.text}
         />
 
-        <ScrollView
-          horizontal
-          style={{ marginBottom: 4, paddingVertical: 8, maxHeight: 50 }}
-        >
+        <ScrollView horizontal style={styles.horizontalScroll}>
           <OptionSearch
             chips={stateContent}
             value={searchStatus}
@@ -132,17 +143,23 @@ const BrowsePollsScreen = () => {
             polls={polls}
             navigation={navigation}
           />
+          {count != polls?.length &&
+          <Button
+              mode="contained"
+              icon="plus-circle-outline"
+              style={{ marginBottom: 16 }}
+              onPress={getMorePolls}
+            >
+              Cargar Más
+            </Button>
+          }
         </ScrollView>
 
         <FAB
           icon="plus"
           label="Crear nueva encuesta"
           mode="elevated"
-          style={{
-            position: "absolute",
-            right: 16,
-            bottom: 16,
-          }}
+          style={styles.fab}
           onPress={() => navigation.navigate("CreatePoll")}
         />
       </View>
@@ -169,5 +186,15 @@ const styles = StyleSheet.create({
   },
   text: {
     marginBottom: 16,
+  },
+  horizontalScroll: {
+    marginBottom: 4,
+    paddingVertical: 8,
+    maxHeight: 50,
+  },
+  fab: {
+    position: "absolute",
+    right: 16,
+    bottom: 16,
   },
 });

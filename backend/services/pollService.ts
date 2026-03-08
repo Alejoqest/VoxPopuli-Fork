@@ -6,38 +6,46 @@ import { authService } from "./authService";
 export type searchQuery = {
     text: string;
     state: string;
-    order?: boolean; 
+    order?: boolean;
+    cursor?: string;
 }
 
 export const pollService = {
     getPollsByUserId: async (id: string): Promise<Poll[]> => {
-        const { data, error } = await supabase
+        const { data, count, error } = await supabase
             .from("poll")
-            .select("*, profile(id, username, color)")
+            .select("*, profile(id, username, color)", { count: 'estimated' })
             .eq("creator_id", id)
             .order("created_at", { ascending: false })
 
         if (error) throw new Error(error.message);
 
+        console.log(count)
+
         return data || [];
     },
 
-    getPolls: async ({text, state , order } : searchQuery) => {
+    getPolls: async ({ text, state, order, cursor }: searchQuery) => {
         let query = supabase
             .from("poll")
-            .select("*, profile(id, username, color)")
+            .select("*, profile(id, username, color)", { count: 'estimated' })
             .ilike(`title`, `%${text}%`)
-            .order('created_at', { ascending: order});
+            .order('created_at', { ascending: order })
+            .limit(5);
 
         if (state !== "all") {
-            query.eq('status', state);
+            query = query.eq('status', state);
         }
 
-        const { data, error } = await query;
+        if (cursor) {
+            query = order ? query.gt("created_at", cursor) : query.lt("created_at", cursor);
+        }
+
+        const { data, count, error } = await query;
 
         if (error) throw new Error(error.message);
 
-        return data || [];
+        return { data, count };
     },
 
     getPollById: async (id: number): Promise<Poll> => {
