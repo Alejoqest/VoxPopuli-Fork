@@ -96,6 +96,7 @@ const BrowsePollsScreen = () => {
   const changeSearch = async () => {
     setCount(undefined);
     setPolls(undefined);
+    setLoadingMore(false);
     const text = search.toLowerCase();
     const order = searchOrder ? true : false;
     const query: searchQuery = {
