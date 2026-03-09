@@ -1,19 +1,10 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import {
-  ActivityIndicator,
-  Button,
-  Divider,
-  FAB,
-  MD3DarkTheme,
-  Searchbar,
-  Text,
-} from "react-native-paper";
+import { Button, Divider, FAB, Searchbar, Text } from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AppStackParamList } from "../../../../navigation/appStack";
 import { Poll } from "../../models/Polls";
 import {
@@ -25,7 +16,6 @@ import {
   orderContent,
   stateContent,
 } from "../../../constants/optionsSearchContent";
-import loading from "../../components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -86,13 +76,6 @@ const BrowsePollsScreen = () => {
     }
   };
 
-  //TODO create another function to load more.
-  //TODO creates another setting that adds to the results
-  //TODO add a function trigger in the pollresults that send the last index array to the loading more function
-  //TODO add logic in the pollresults so the dettectds the total and compare to the total of the list to put the load more bnt
-  //TODO create log to store queries to avoid reseting params when queing it
-  //TODO create a more results btn (compoaraes the total amount with the )
-
   const changeSearch = async () => {
     setCount(undefined);
     setPolls(undefined);
@@ -104,10 +87,8 @@ const BrowsePollsScreen = () => {
       state: searchStatus,
       order: order,
     };
-
     try {
       const data = await pollService.getPolls(query);
-      console.log(data.count);
       setCount(data.count || 0);
       setPolls(data.data);
       setPreSearch(text);
