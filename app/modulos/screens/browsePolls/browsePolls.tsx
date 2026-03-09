@@ -1,7 +1,15 @@
 import React, { useRef, useState, useEffect } from "react";
 import { View, StyleSheet, ScrollView } from "react-native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
-import { Button, Divider, FAB, Searchbar, Text } from "react-native-paper";
+import {
+  ActivityIndicator,
+  Button,
+  Divider,
+  FAB,
+  MD3DarkTheme,
+  Searchbar,
+  Text,
+} from "react-native-paper";
 import { useNavigation } from "@react-navigation/native";
 import GradientBackground from "../../components/gradientBackground/gradientBackground";
 import BrowsePollsView from "../../components/browsePollsView/browsePollsView";
@@ -17,6 +25,7 @@ import {
   orderContent,
   stateContent,
 } from "../../../constants/optionsSearchContent";
+import loading from "../../components/loading/loading";
 
 type NavigationProp = NativeStackNavigationProp<
   AppStackParamList,
@@ -31,6 +40,7 @@ const BrowsePollsScreen = () => {
   const [searchOrder, setSearchOrder] = useState<string>("");
   const [count, setCount] = useState<number>();
   const [preSearch, setPreSearch] = useState<string>("");
+  const [loadingMore, setLoadingMore] = useState(false);
   const scrollRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -57,6 +67,7 @@ const BrowsePollsScreen = () => {
 
   const getMorePolls = async () => {
     if (!polls || count == polls!.length) return;
+    setLoadingMore(true);
     const lastValue = polls[polls!.length - 1]!.created_at;
     const order = searchOrder ? true : false;
     const query: searchQuery = {
@@ -69,6 +80,7 @@ const BrowsePollsScreen = () => {
       const { data } = await pollService.getPolls(query);
       const newPolls = polls.concat(data);
       setPolls(newPolls);
+      setLoadingMore(false);
     } catch (err) {
       console.log(err);
     }
@@ -143,16 +155,18 @@ const BrowsePollsScreen = () => {
             polls={polls}
             navigation={navigation}
           />
-          {count != polls?.length &&
-          <Button
-              mode="contained"
+          {count != polls?.length && (
+            <Button
+              mode="elevated"
               icon="plus-circle-outline"
+              loading={loadingMore}
+              disabled={loadingMore}
               style={{ marginBottom: 16 }}
               onPress={getMorePolls}
             >
               Cargar Más
             </Button>
-          }
+          )}
         </ScrollView>
 
         <FAB
