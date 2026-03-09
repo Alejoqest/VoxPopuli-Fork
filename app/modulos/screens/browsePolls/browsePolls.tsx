@@ -88,9 +88,9 @@ const BrowsePollsScreen = () => {
       order: order,
     };
     try {
-      const data = await pollService.getPolls(query);
-      setCount(data.count || 0);
-      setPolls(data.data);
+      const { data, count } = await pollService.getPolls(query);
+      setCount(count || 0);
+      setPolls(data);
       setPreSearch(text);
     } catch (err) {
       console.log(err);
