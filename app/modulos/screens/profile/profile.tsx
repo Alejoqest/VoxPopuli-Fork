@@ -20,6 +20,8 @@ type props = {
   route: RouteProp<AppStackParamList, "Profile">;
 };
 
+const LIMIT : boolean = true;
+
 const ProfileScreen = ({ route }: props) => {
   const navigation = useNavigation<NavigationProp>();
   const [profile, setProfile] = useState<Profile | null>(null);
@@ -43,7 +45,7 @@ const ProfileScreen = ({ route }: props) => {
 
       const { data, count } = await pollService.getPollsByUserId(
         profileId,
-        true,
+        LIMIT,
       );
       setPolls(data);
       setCount(count || 0);
@@ -62,7 +64,7 @@ const ProfileScreen = ({ route }: props) => {
       unsubscribe = await pollService.onPollChange(profile.id, async () => {
         const { data, count } = await pollService.getPollsByUserId(
           profile.id,
-          true,
+          LIMIT,
         );
         setPolls(data);
         setCount(count || 0);
