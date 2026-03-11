@@ -5,7 +5,9 @@ import Header from "../app/modulos/components/header/header";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { AuthContext } from "../app/modulos/context/authContext";
 
-const ProfileScreen = lazy(() => import("../app/modulos/screens/profile/profile"));
+const ProfileScreen = lazy(
+  () => import("../app/modulos/screens/profile/profile"),
+);
 const CreatePollScreen = lazy(
   () => import("../app/modulos/screens/createPoll/createPoll"),
 );
@@ -21,6 +23,9 @@ const BrowsePollsScreen = lazy(
 const VoteUserScreen = lazy(
   () => import("../app/modulos/screens/voteUser/voteUser"),
 );
+const PollUserScreen = lazy(
+  () => import("../app/modulos/screens/pollUser/pollUser"),
+);
 
 export type AppStackParamList = {
   Profile: { id?: string };
@@ -28,6 +33,7 @@ export type AppStackParamList = {
   BrowsePoll: undefined;
   PollInterface: { id: number };
   PollResults: { id: number };
+  PollUser: { id: string };
   VoteUser: { id: number };
 };
 
@@ -44,42 +50,43 @@ type PollResultsScreenProps = NativeStackScreenProps<
 >;
 
 type Props = {
-    children: ReactNode;
-  };
+  children: ReactNode;
+};
 
-  const AuthProvider = ({ children }: Props) => {
-    const [userId, setUserId] = useState<string | null>(null);
+const AuthProvider = ({ children }: Props) => {
+  const [userId, setUserId] = useState<string | null>(null);
 
-    useEffect(() => {
-      const loadUser = async () => {
-        const id = await AsyncStorage.getItem("user_id");
-        setUserId(id);
-      };
-      loadUser();
-    }, []);
+  useEffect(() => {
+    const loadUser = async () => {
+      const id = await AsyncStorage.getItem("user_id");
+      setUserId(id);
+    };
+    loadUser();
+  }, []);
 
-    return (
-      <AuthContext.Provider value={{ userId }}>{children}</AuthContext.Provider>
-    );
-  };
+  return (
+    <AuthContext.Provider value={{ userId }}>{children}</AuthContext.Provider>
+  );
+};
 
 const AppStack = () => {
   return (
     <AuthProvider>
-    <Stack.Navigator
-      screenOptions={{
-        headerShown: true,
-        header: (props) => <Header {...props} />,
-      }}
-      initialRouteName={"Profile"}
-    >
-      <Stack.Screen name="Profile" component={ProfileScreen} />
-      <Stack.Screen name="CreatePoll" component={CreatePollScreen} />
-      <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
-      <Stack.Screen name="PollResults" component={PollResultsScreen} />
-      <Stack.Screen name="BrowsePoll" component={BrowsePollsScreen} />
-      <Stack.Screen name="VoteUser" component={VoteUserScreen} />
-    </Stack.Navigator>
+      <Stack.Navigator
+        screenOptions={{
+          headerShown: true,
+          header: (props) => <Header {...props} />,
+        }}
+        initialRouteName={"Profile"}
+      >
+        <Stack.Screen name="Profile" component={ProfileScreen} />
+        <Stack.Screen name="CreatePoll" component={CreatePollScreen} />
+        <Stack.Screen name="PollInterface" component={PollInterfaceScreen} />
+        <Stack.Screen name="PollResults" component={PollResultsScreen} />
+        <Stack.Screen name="BrowsePoll" component={BrowsePollsScreen} />
+        <Stack.Screen name="VoteUser" component={VoteUserScreen} />
+        <Stack.Screen name="PollUser" component={PollUserScreen} />
+      </Stack.Navigator>
     </AuthProvider>
   );
 };

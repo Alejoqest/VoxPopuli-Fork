@@ -20,7 +20,7 @@ type props = {
   route: RouteProp<AppStackParamList, "Profile">;
 };
 
-const LIMIT : boolean = true;
+const LIMIT: boolean = true;
 
 const ProfileScreen = ({ route }: props) => {
   const navigation = useNavigation<NavigationProp>();
@@ -140,7 +140,13 @@ const ProfileScreen = ({ route }: props) => {
         <ScrollView style={styles.container}>
           <BrowsePollsView type="user" polls={polls} navigation={navigation} />
           {count > 5 && (
-            <Button mode="elevated" style={{ marginBottom: 16 }}>
+            <Button
+              mode="elevated"
+              style={{ marginBottom: 16 }}
+              onPress={() =>
+                navigation.navigate("PollUser", { id: profile.id })
+              }
+            >
               Ver más
             </Button>
           )}
