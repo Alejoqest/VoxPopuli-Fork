@@ -51,10 +51,6 @@ const VoteUserScreen = ({ route }: props) => {
             {vote.optionText}
           </Text>
           <UserList vote={vote} profiles={profiles} navigation={navigation} />
-          {
-            //<Surface style={styles.surface}>
-            //</Surface>
-          }
         </View>
       </ScrollView>
     </GradientBackground>
