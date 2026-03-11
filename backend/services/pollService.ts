@@ -10,19 +10,28 @@ export type searchQuery = {
     cursor?: string;
 }
 
+export type getPollByUserIdReturn = {
+    data: Poll[];
+    count: number | null;
+}
+
 export const pollService = {
-    getPollsByUserId: async (id: string): Promise<Poll[]> => {
-        const { data, count, error } = await supabase
+    getPollsByUserId: async (id: string, limit ?: boolean): Promise<getPollByUserIdReturn> => {
+        let query = supabase
             .from("poll")
             .select("*, profile(id, username, color)", { count: 'estimated' })
             .eq("creator_id", id)
-            .order("created_at", { ascending: false })
+            .order("created_at", { ascending: false });
+        
+        if (limit) query = query.limit(5);
+        
+        const { data, count, error } = await query;
 
         if (error) throw new Error(error.message);
 
         console.log(count)
 
-        return data || [];
+        return { data, count };
     },
 
     getPolls: async ({ text, state, order, cursor }: searchQuery) => {

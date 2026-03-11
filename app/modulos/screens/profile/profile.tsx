@@ -24,6 +24,7 @@ const ProfileScreen = ({ route }: props) => {
   const navigation = useNavigation<NavigationProp>();
   const [profile, setProfile] = useState<Profile | null>(null);
   const [polls, setPolls] = useState<Poll[] | undefined>(undefined);
+  const [count, setCount] = useState<number>(0);
   const [loading, setLoading] = useState(true);
   const [isHome, setIsHome] = useState(false);
 
@@ -32,22 +33,23 @@ const ProfileScreen = ({ route }: props) => {
       setLoading(true);
 
       const userId = await AsyncStorage.getItem("user_id");
-
       if (!userId) return;
 
-      const profileId = (!route.params) ? userId : route.params!.id!;
-
+      const profileId = !route.params ? userId : route.params!.id!;
       if (profileId == userId) setIsHome(true);
 
-      const data = await profileService.getUser(profileId);
-      setProfile(data);
+      const user = await profileService.getUser(profileId);
+      setProfile(user);
 
-      const poll = await pollService.getPollsByUserId(profileId);
-      setPolls(poll);
+      const { data, count } = await pollService.getPollsByUserId(
+        profileId,
+        true,
+      );
+      setPolls(data);
+      setCount(count || 0);
 
       setLoading(false);
     };
-
     load();
   }, []);
 
@@ -58,8 +60,12 @@ const ProfileScreen = ({ route }: props) => {
 
     const subscribe = async () => {
       unsubscribe = await pollService.onPollChange(profile.id, async () => {
-        const poll = await pollService.getPollsByUserId(profile.id);
-        setPolls(poll);
+        const { data, count } = await pollService.getPollsByUserId(
+          profile.id,
+          true,
+        );
+        setPolls(data);
+        setCount(count || 0);
       });
     };
 
@@ -131,6 +137,11 @@ const ProfileScreen = ({ route }: props) => {
         <Divider style={styles.margin} />
         <ScrollView style={styles.container}>
           <BrowsePollsView type="user" polls={polls} navigation={navigation} />
+          {count > 5 && (
+            <Button mode="elevated" style={{ marginBottom: 16 }}>
+              Ver más
+            </Button>
+          )}
         </ScrollView>
         <Divider style={styles.margin} />
 
