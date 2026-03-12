@@ -29,8 +29,6 @@ export const pollService = {
 
         if (error) throw new Error(error.message);
 
-        console.log(count)
-
         return { data, count };
     },
 
