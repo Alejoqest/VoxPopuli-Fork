@@ -24,9 +24,9 @@ const Header = ({
   const [visible, setVisible] = useState(false);
   const showBackButton = back && !isOwnProfile;
 
-  const navigate = (route: string): void => {
-    navigation.navigate(route);
-    closeMenu();
+  const handleHome = () => {
+    if (title == "Profile" && isOwnProfile) return;
+    navigation.replace("Profile", { id: userId });
   };
 
   const handleLogout = async () => {
@@ -56,7 +56,7 @@ const Header = ({
         {back && showBackButton ? (
           <>
             <Menu.Item
-              onPress={() => navigate("Profile")}
+              onPress={handleHome}
               title="Hogar"
               leadingIcon={"home"}
             />

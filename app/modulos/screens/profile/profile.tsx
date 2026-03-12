@@ -37,7 +37,7 @@ const ProfileScreen = ({ route }: props) => {
       const userId = await AsyncStorage.getItem("user_id");
       if (!userId) return;
 
-      const profileId = !route.params ? userId : route.params!.id!;
+      const profileId = route.params?.id || userId;
       if (profileId == userId) setIsHome(true);
 
       const user = await profileService.getUser(profileId);
