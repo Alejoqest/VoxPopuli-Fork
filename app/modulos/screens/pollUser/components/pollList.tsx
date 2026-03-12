@@ -16,7 +16,7 @@ const PollList = ({ polls, navigation }: Props) => {
     <List.Section style={{ margin: 0 }}>
       <Divider style={styles.text} />
       {polls.length == 0 ? (
-        <List.Item title="No hay votos" titleStyle={{ textAlign: "center" }} />
+        <List.Item title="No hay encuestas" titleStyle={{ textAlign: "center" }} />
       ) : (
         polls.map((p) => {
           return (

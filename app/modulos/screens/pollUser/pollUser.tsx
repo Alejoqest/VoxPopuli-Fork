@@ -38,7 +38,7 @@ const PollUserScreen = ({ route }: props) => {
     <GradientBackground>
       <ScrollView contentContainerStyle={styles.container} style={{ flex: 1 }}>
         <View style={styles.form}>
-          <Text variant="titleMedium">Encuentas</Text>
+          <Text variant="headlineLarge">Encuestas creadas</Text>
           <UserList polls={polls} navigation={navigation} />
         </View>
       </ScrollView>
