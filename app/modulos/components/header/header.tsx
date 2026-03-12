@@ -19,8 +19,8 @@ const Header = ({
   const { userId } = useContext(AuthContext);
   const params = route.params as ProfileParams | undefined;
   const profileId = params?.id;
-  const isOwnProfile = userId === profileId;
   const title = getHeaderTitle(options, route.name);
+  const isOwnProfile = userId === profileId && title == "Profile";
   const [visible, setVisible] = useState(false);
   const showBackButton = back && !isOwnProfile;
 
