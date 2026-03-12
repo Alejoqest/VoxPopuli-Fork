@@ -97,7 +97,7 @@ const ProfileScreen = ({ route }: props) => {
               backgroundColor: profile.color,
             }}
           />
-          <View style={{ marginBottom: 16 }}>
+          <View style={{ padding: 16 }}>
             <Text variant="headlineMedium" style={{ textAlign: "center" }}>
               {profile.username}
             </Text>
@@ -180,9 +180,11 @@ const styles = StyleSheet.create({
     alignItems: "stretch",
   },
   center: {
+    flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
+    flexWrap: "wrap",
   },
   margin: {
     marginBottom: 16,
