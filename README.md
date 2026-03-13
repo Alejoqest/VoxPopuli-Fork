@@ -30,7 +30,7 @@ Una aplicacion de votacion para Android realizada para un final del instituto.
 
 ## Uso
 
-### Iniciar Sesion y Registrarse
+### Iniciar Sesión y Registrarse
 
 La aplicación comienza con un formulario de inicio de sesión que permite al usuario ingresar mediante:
 
@@ -69,10 +69,14 @@ Para crear una encuesta se deben completar los siguientes datos:
 ### Búsqueda de encuestas
 
 Las encuestas se pueden buscar mediante una **barra de búsqueda.** 
-Debajo de esta barra se encuentran **filtros** que permiten refinar la búsqueda según:
+Debajo de la barra se encuentran **filtros** que permiten especificar la búsqueda según:
 
 - El estado de la encuesta (activa, finalizada o en espera.)
-- Si la encuesta es propia o de otros usuarios
+- Ordenar los resultados según la fecha de creación de la encuesta.
+
+#### Resultados
+
+Los resultados de la busqueda tienen un limite de 5, si la cantidad total de resultados supera la cantidad limite se podra buscar más resultados presionado un boton que aparece al final de la lista de resultados.
 
 ### Votación
 
