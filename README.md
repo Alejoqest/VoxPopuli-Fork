@@ -4,12 +4,13 @@
 </div>
 <br>
 
-# <p style="text-align: center; font-size: larger;">VoxPopuli 🗣️📣</p>
+# VoxPopuli🗣️📣
 
 Una aplicacion de votacion para Android realizada para un final del instituto.
 
 ### Tabla de contenidos
 
+- [VoxPopuli](#voxpopuli)
 - [Resumen](#resumen)
 - [Uso](#uso)
   - [Iniciar sesión y registrarse](#iniciar-sesión-y-registrarse)
@@ -130,7 +131,7 @@ cd VoxPopuli-Fork
 npm install
 ```
 
-4. Crear el archivo `.env` en la carpeta principal del proyecto y agregar las siguientes variables de entorno.
+4. Crear el archivo `.env` a partir del `.env.example` en la carpeta principal del proyecto y agregar las siguientes variables de entorno.
 
 ```env
 EXPO_PUBLIC_SUPABASE_URL=supabase-url
